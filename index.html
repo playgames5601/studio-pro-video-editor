@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudioPro AI - Advanced Web Video Editor</title>
+    <style>
+        :root {
+            --bg-dark: #121214;
+            --bg-panel: #18181b;
+            --bg-element: #27272a;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border: #3f3f46;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        header {
+            height: 50px;
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background-color: var(--bg-element);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: var(--border);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Main Workspace */
+        .workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            grid-template-rows: 1fr 280px;
+            height: calc(100vh - 50px);
+        }
+
+        /* Left Panel - Media & AI Tools */
+        .left-panel {
+            grid-row: 1 / 2;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--bg-dark);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 4px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--text-main);
+            border-bottom-color: var(--accent);
+            background-color: var(--bg-panel);
+        }
+
+        .tab-content {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Center Preview */
+        .preview-area {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            background-color: #09090b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .canvas-container {
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            background: #111;
+        }
+
+        .player-controls {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: var(--bg-element);
+            border: 1px solid var(--border);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .control-btn:hover {
+            background: var(--accent);
+        }
+
+        /* Right Panel - Properties */
+        .right-panel {
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+            background-color: var(--bg-panel);
+            border-left: 1px solid var(--border);
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 20px;
+        }
+
+        .panel-section h3 {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prop-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .prop-row input[type="range"] {
+            width: 130px;
+        }
+
+        .prop-row input[type="text"], .prop-row select {
+            background: var(--bg-element);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            width: 130px;
+        }
+
+        /* Timeline Area */
+        .timeline-area {
+            grid-column: 1 / 4;
+            grid-row: 2 / 3;
+            background-color: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .timeline-toolbar {
+            height: 35px;
+            background-color: var(--bg-dark);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 10px;
+        }
+
+        .timeline-tracks-container {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-ruler {
+            height: 24px;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .track {
+            height: 48px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            position: relative;
+            background: rgba(255,255,255,0.01);
+        }
+
+        .track-label {
+            width: 100px;
+            background: var(--bg-dark);
+            border-right: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .track-content {
+            flex: 1;
+            position: relative;
+        }
+
+        .clip {
+            position: absolute;
+            height: 40px;
+            top: 4px;
+            background: var(--accent);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .clip.video-clip { background: #3b82f6; }
+        .clip.audio-clip { background: #10b981; }
+        .clip.text-clip { background: #f59e0b; }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ef4444;
+            z-index: 20;
+            pointer-events: none;
+            left: 50px;
+        }
+
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -5px;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #ef4444;
+        }
+
+        /* Media Upload & AI boxes */
+        .upload-box {
+            border: 2px dashed var(--border);
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        .upload-box:hover {
+            border-color: var(--accent);
+        }
+        
+        .ai-card {
+            background: var(--bg-element);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .ai-card h4 {
+            font-size: 12px;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            🎬 StudioPro <span>AI Studio</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn" onclick="splitClip()">✂️ Böl (S)</button>
+            <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar (Export)</button>
+        </div>
+    </header>
+
+    <!-- Workspace -->
+    <div class="workspace">
+        
+        <!-- Left Sidebar -->
+        <div class="left-panel">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('media')">Medya</div>
+                <div class="tab" onclick="switchTab('ai')">Yapay Zeka</div>
+                <div class="tab" onclick="switchTab('text')">Metin</div>
+                <div class="tab" onclick="switchTab('effects')">Efektler</div>
+            </div>
+
+            <!-- Media Tab Content -->
+            <div id="tab-media" class="tab-content active">
+                <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                    📁 Video/Görsel Yükle
+                    <input type="file" id="fileInput" style="display:none" accept="video/*,audio/*,image/*" onchange="handleFileSelect(event)">
+                </div>
+                <div id="mediaLibrary" style="font-size:12px; color:var(--text-muted);">
+                    Yüklenen medyalar burada görünür.
+                </div>
+            </div>
+
+            <!-- AI Tab Content -->
+            <div id="tab-ai" class="tab-content">
+                <div class="ai-card">
+                    <h4>✨ AI Auto Subtitle</h4>
+                    <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Videodaki sesleri otomatik metne çevirir.</p>
+                    <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="alert('AI Konuşma Tanıma başlatıldı!')">Altyazı Üret</button>
+                </div>
+                <div class="ai-card">
+                    <h4>🤖 Gemini AI Script</h4>
+                    <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Sosyal medya için akıllı kanca cümleler önerir.</p>
+                    <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="alert('AI Metin önerileri hazırlandı!')">Fikir Üret</button>
+                </div>
+            </div>
+
+            <!-- Text Tab Content -->
+            <div id="tab-text" class="tab-content">
+                <button class="btn" style="width:100%; justify-content:center; margin-bottom:8px;" onclick="addTextLayer('Standart Başlık')">+ Başlık Ekle</button>
+                <button class="btn" style="width:100%; justify-content:center;" onclick="addTextLayer('Alt Üçüncü (Lower Third)')">+ Altyazı Ekle</button>
+            </div>
+
+            <!-- Effects Tab Content -->
+            <div id="tab-effects" class="tab-content">
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Sinematik Filtreler:</div>
+                <button class="btn" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="applyFilter('cyberpunk')">Cyberpunk Neon</button>
+                <button class="btn" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="applyFilter('vhs')">VHS Retro</button>
+                <button class="btn" style="width:100%; justify-content:center;" onclick="applyFilter('hdr')">HDR Boost</button>
+            </div>
+        </div>
+
+        <!-- Center Preview Monitor -->
+        <div class="preview-area">
+            <div class="canvas-container" style="width: 640px; height: 360px;">
+                <canvas id="previewCanvas" width="1280" height="720"></canvas>
+            </div>
+            <div class="player-controls">
+                <button class="control-btn" onclick="togglePlay()">▶</button>
+                <span id="timeDisplay" style="font-size:12px; font-family:monospace;">00:00 / 00:00</span>
+            </div>
+        </div>
+
+        <!-- Right Properties Panel -->
+        <div class="right-panel">
+            <div class="panel-section">
+                <h3>Video Özellikleri</h3>
+                <div class="prop-row">
+                    <span>Ölçek (Scale)</span>
+                    <input type="range" min="0.1" max="2" step="0.1" value="1" oninput="updateProp('scale', this.value)">
+                </div>
+                <div class="prop-row">
+                    <span>Opaklık</span>
+                    <input type="range" min="0" max="1" step="0.1" value="1" oninput="updateProp('opacity', this.value)">
+                </div>
+                <div class="prop-row">
+                    <span>Hız (Speed)</span>
+                    <select onchange="updateProp('speed', this.value)">
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1.0x (Normal)</option>
+                        <option value="2">2.0x</option>
+                        <option value="4">4.0x</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>Renk Ayarları</h3>
+                <div class="prop-row">
+                    <span>Parlaklık</span>
+                    <input type="range" min="0" max="200" value="100" oninput="updateProp('brightness', this.value)">
+                </div>
+                <div class="prop-row">
+                    <span>Kontrast</span>
+                    <input type="range" min="0" max="200" value="100" oninput="updateProp('contrast', this.value)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Area -->
+        <div class="timeline-area">
+            <div class="timeline-toolbar">
+                <button class="btn" style="padding:2px 8px; font-size:11px;">🔍 Yakınlaştır</button>
+                <button class="btn" style="padding:2px 8px; font-size:11px;">🔎 Uzaklaştır</button>
+            </div>
+            <div class="timeline-tracks-container" id="timelineContainer">
+                <div class="playhead" id="playhead"></div>
+                <div class="timeline-ruler"></div>
+                
+                <!-- Video Track -->
+                <div class="track">
+                    <div class="track-label">Video 1</div>
+                    <div class="track-content" id="videoTrack">
+                        <div class="clip video-clip" style="left: 0px; width: 250px;" onclick="selectClip(this)">Örnek Video Klip.mp4</div>
+                    </div>
+                </div>
+
+                <!-- Audio Track -->
+                <div class="track">
+                    <div class="track-label">Ses 1</div>
+                    <div class="track-content" id="audioTrack">
+                        <div class="clip audio-clip" style="left: 0px; width: 180px;" onclick="selectClip(this)">Arkaplan_Müzik.mp3</div>
+                    </div>
+                </div>
+
+                <!-- Text Track -->
+                <div class="track">
+                    <div class="track-label">Metin</div>
+                    <div class="track-content" id="textTrack">
+                        <div class="clip text-clip" style="left: 50px; width: 120px;" onclick="selectClip(this)">Giriş Yazısı</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Tab Switcher
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // Canvas & Editor Core Logic
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+        let isPlaying = false;
+
+        function drawCanvasPlaceholder() {
+            ctx.fillStyle = '#18181b';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#71717a';
+            ctx.font = '24px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Önizleme Ekranı (Medya Ekleyin)', canvas.width / 2, canvas.height / 2);
+        }
+        drawCanvasPlaceholder();
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            alert(isPlaying ? 'Oynatılıyor...' : 'Duraklatıldı.');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('mediaLibrary').innerHTML = `✅ Yüklendi: <br><b>${file.name}</b>`;
+                // Zaman çizelgesine yeni klip ekleme simülasyonu
+                const videoTrack = document.getElementById('videoTrack');
+                const newClip = document.createElement('div');
+                newClip.className = 'clip video-clip';
+                newClip.style.left = '260px';
+                newClip.style.width = '200px';
+                newClip.innerText = file.name;
+                videoTrack.appendChild(newClip);
+            }
+        }
+
+        function selectClip(clipElement) {
+            document.querySelectorAll('.clip').forEach(c => c.style.border = '1px solid rgba(255,255,255,0.2)');
+            clipElement.style.border = '2px solid #fff';
+        }
+
+        function splitClip() {
+            alert('Seçili klip oynatma kafasından ikiye bölündü.');
+        }
+
+        function addTextLayer(text) {
+            const textTrack = document.getElementById('textTrack');
+            const newText = document.createElement('div');
+            newText.className = 'clip text-clip';
+            newText.style.left = '180px';
+            newText.style.width = '100px';
+            newText.innerText = text;
+            textTrack.appendChild(newText);
+        }
+
+        function applyFilter(filterType) {
+            alert(filterType.toUpperCase() + ' filtresi uygulandı!');
+        }
+
+        function updateProp(propName, value) {
+            console.log(`Property updated: ${propName} = ${value}`);
+        }
+
+        function exportVideo() {
+            alert('Dışa Aktarma (Export) başlatıldı! WebM formatında hazırlanıyor...');
+        }
+    </script>
+</body>
+</html>
