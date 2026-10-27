@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>StudioPro - Web Video Editor</title>
+    <title>StudioPro - Video Editor</title>
     <style>
         :root {
             --bg-dark: #0f0f11;
             --bg-panel: #18181b;
             --bg-element: #27272a;
             --accent: #6366f1;
-            --accent-hover: #4f46e5;
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: #3f3f46;
@@ -35,7 +34,6 @@
             overflow: hidden;
         }
 
-        /* Clean Header */
         header {
             height: 48px;
             background-color: var(--bg-panel);
@@ -48,7 +46,6 @@
         }
 
         .logo { font-weight: 700; font-size: 16px; color: var(--text-main); }
-
         .header-actions { display: flex; gap: 6px; }
 
         .btn {
@@ -74,15 +71,14 @@
             overflow: hidden;
         }
 
-        /* Fixed Preview Section */
         .preview-section {
             background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             padding: 8px;
-            height: 42vh;
+            height: 45vh;
             flex-shrink: 0;
             position: relative;
         }
@@ -90,8 +86,7 @@
         .aspect-selector { 
             display: flex; 
             gap: 6px; 
-            margin-bottom: 4px;
-            z-index: 5;
+            margin-bottom: 6px;
         }
 
         .ratio-btn {
@@ -106,12 +101,11 @@
         .ratio-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         .canvas-wrapper {
-            flex: 1;
             width: 100%;
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             position: relative;
         }
 
@@ -119,58 +113,52 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            border-radius: 4px;
-            background: #111;
+            background: #000;
         }
 
-        /* Clean Player Controls - No Overlap */
         .player-bar {
             display: flex;
             align-items: center;
             gap: 10px;
             width: 100%;
-            padding: 6px 8px 0 8px;
-            background: #000;
-            flex-shrink: 0;
+            padding: 8px 12px 0 12px;
         }
 
         .play-btn {
             background: var(--accent);
             border: none;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12px;
             flex-shrink: 0;
         }
 
         .seek-slider {
             flex: 1;
             accent-color: var(--accent);
-            height: 6px;
+            height: 4px;
         }
 
         .time-code { 
             font-size: 10px; 
             font-family: monospace; 
             color: var(--text-muted); 
-            flex-shrink: 0;
-            min-width: 65px;
+            min-width: 60px;
             text-align: right;
         }
 
-        /* Tools Section */
         .tools-section {
             background: var(--bg-panel);
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            height: 22vh;
+            height: 20vh;
             flex-shrink: 0;
         }
 
@@ -178,7 +166,6 @@
             display: flex;
             background: var(--bg-dark);
             border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
         }
 
         .tab-btn {
@@ -188,7 +175,6 @@
             font-size: 11px;
             color: var(--text-muted);
             border-bottom: 2px solid transparent;
-            white-space: nowrap;
         }
 
         .tab-btn.active { color: var(--text-main); border-bottom-color: var(--accent); background: var(--bg-panel); }
@@ -197,18 +183,15 @@
         .tab-body.active { display: block; }
 
         .control-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-
-        .slider-group { display: flex; flex-direction: column; gap: 4px; font-size: 10px; }
+        .slider-group { display: flex; flex-direction: column; gap: 2px; font-size: 10px; }
         .slider-group input[type="range"] { width: 100%; accent-color: var(--accent); }
 
-        /* Timeline Area */
         .timeline-section {
             flex: 1;
             background: var(--bg-dark);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
         }
 
         .timeline-header {
@@ -220,14 +203,12 @@
             font-size: 10px;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
         }
 
         .tracks-scroll {
             flex: 1;
             overflow: auto;
             padding: 6px 0;
-            position: relative;
         }
 
         .track-row {
@@ -235,9 +216,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 4px;
-            position: relative;
             background: rgba(255,255,255,0.02);
-            min-width: 100%;
         }
 
         .track-header {
@@ -251,9 +230,6 @@
             font-size: 9px;
             color: var(--text-muted);
             font-weight: bold;
-            position: sticky;
-            left: 0;
-            z-index: 10;
         }
 
         .track-timeline { flex: 1; position: relative; height: 100%; }
@@ -262,23 +238,19 @@
             position: absolute;
             height: 30px;
             top: 4px;
-            background: #2563eb;
+            left: 4px;
+            background: var(--accent);
             border-radius: 4px;
-            padding: 2px 6px;
+            padding: 2px 8px;
             font-size: 10px;
             color: white;
             display: flex;
             align-items: center;
-            overflow: hidden;
-            white-space: nowrap;
-            border: 1px solid rgba(255,255,255,0.3);
         }
-
-        .media-clip.selected { border: 2px solid #fff; box-shadow: 0 0 8px var(--accent); }
 
         .upload-touch-btn {
             border: 2px dashed var(--border);
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             border-radius: 6px;
             font-size: 11px;
@@ -288,28 +260,26 @@
 </head>
 <body>
 
-    <!-- Clean Header -->
     <header>
         <div class="logo">StudioPro</div>
         <div class="header-actions">
             <button class="btn" onclick="splitClip()">✂️ Böl</button>
-            <button class="btn btn-danger" onclick="deleteSelectedClip()">🗑 Sil</button>
+            <button class="btn btn-danger" onclick="deleteClip()">🗑 Sil</button>
             <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar</button>
         </div>
     </header>
 
     <div class="app-container">
         
-        <!-- Preview Screen -->
         <div class="preview-section">
             <div class="aspect-selector">
-                <button class="ratio-btn active" onclick="setAspect(16, 9, this)">16:9 YT</button>
-                <button class="ratio-btn" onclick="setAspect(9, 16, this)">9:16 TikTok</button>
+                <button class="ratio-btn" onclick="setAspect(16, 9, this)">16:9 YT</button>
+                <button class="ratio-btn active" onclick="setAspect(9, 16, this)">9:16 TikTok</button>
                 <button class="ratio-btn" onclick="setAspect(1, 1, this)">1:1 Kare</button>
             </div>
 
             <div class="canvas-wrapper">
-                <canvas id="previewCanvas" width="1280" height="720"></canvas>
+                <canvas id="previewCanvas" width="720" height="1280"></canvas>
             </div>
 
             <div class="player-bar">
@@ -319,18 +289,16 @@
             </div>
         </div>
 
-        <!-- Controls -->
         <div class="tools-section">
             <div class="nav-tabs">
                 <div class="tab-btn active" onclick="switchTab('media')">📁 Medya</div>
                 <div class="tab-btn" onclick="switchTab('adjust')">🎛 Özelleştir</div>
                 <div class="tab-btn" onclick="switchTab('effects')">✨ Efektler</div>
-                <div class="tab-btn" onclick="switchTab('ai')">🤖 AI Altyazı</div>
             </div>
 
             <div id="tab-media" class="tab-body active">
                 <div class="upload-touch-btn" onclick="document.getElementById('fileInput').click()">
-                    ➕ Video / Görsel Seç
+                    ➕ Video Seç
                     <input type="file" id="fileInput" style="display:none" accept="video/*" onchange="handleFileSelect(event)">
                 </div>
                 <div id="mediaStatus" style="font-size:10px; margin-top:4px; color:var(--text-muted); text-align:center;"></div>
@@ -339,16 +307,8 @@
             <div id="tab-adjust" class="tab-body">
                 <div class="control-grid">
                     <div class="slider-group">
-                        <label>Ölçek (Büyüt/Küçült)</label>
-                        <input type="range" min="0.2" max="3" step="0.1" value="1" id="scaleSlider" oninput="updateProp('scale', this.value)">
-                    </div>
-                    <div class="slider-group">
-                        <label>X Konumu (Sağ/Sol)</label>
-                        <input type="range" min="-300" max="300" value="0" oninput="updateProp('posX', this.value)">
-                    </div>
-                    <div class="slider-group">
-                        <label>Y Konumu (Yukarı/Aşağı)</label>
-                        <input type="range" min="-300" max="300" value="0" oninput="updateProp('posY', this.value)">
+                        <label>Ölçek (Boyut)</label>
+                        <input type="range" min="0.2" max="3" step="0.1" value="1" oninput="updateProp('scale', this.value)">
                     </div>
                     <div class="slider-group">
                         <label>Ses Seviyesi</label>
@@ -358,32 +318,20 @@
             </div>
 
             <div id="tab-effects" class="tab-body">
-                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:4px;">
+                <div style="display:flex; gap:6px;">
                     <button class="btn" onclick="setFilter('none')">Normal</button>
                     <button class="btn" onclick="setFilter('grayscale')">Siyah-Beyaz</button>
                     <button class="btn" onclick="setFilter('invert')">Negatif</button>
-                    <button class="btn" onclick="setFilter('blur')">Bulanık</button>
-                    <button class="btn" onclick="setFilter('sepia')">Sepya</button>
                 </div>
-            </div>
-
-            <div id="tab-ai" class="tab-body">
-                <button class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:4px;" onclick="runSpeechAI()">✨ Türkçe AI Otomatik Altyazı Başlat</button>
-                <div id="aiOutput" style="font-size:10px; color:var(--accent); text-align:center;"></div>
             </div>
         </div>
 
-        <!-- Timeline -->
         <div class="timeline-section">
             <div class="timeline-header">ZAMAN ÇİZELGESİ</div>
-            <div class="tracks-scroll" id="timelineScroll">
+            <div class="tracks-scroll">
                 <div class="track-row">
-                    <div class="track-header">VIDEO</div>
+                    <div class="track-header">VİDEO</div>
                     <div class="track-timeline" id="videoTrack"></div>
-                </div>
-                <div class="track-row">
-                    <div class="track-header">ALTYAZI</div>
-                    <div class="track-timeline" id="textTrack"></div>
                 </div>
             </div>
         </div>
@@ -395,21 +343,11 @@
         const ctx = canvas.getContext('2d');
         let activeVideoElement = null;
         let isPlaying = false;
-
-        let videoProps = {
-            scale: 1,
-            posX: 0,
-            posY: 0,
-            brightness: 100,
-            contrast: 100,
-            filter: 'none'
-        };
-
-        let clips = [];
-        let selectedClipIndex = -1;
+        let videoProps = { scale: 1, filter: 'none' };
+        let clipName = '';
 
         function drawPlaceholder() {
-            ctx.fillStyle = '#18181b';
+            ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#71717a';
             ctx.font = '14px sans-serif';
@@ -428,11 +366,9 @@
         function setAspect(w, h, btn) {
             document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             if (w === 9) { canvas.width = 720; canvas.height = 1280; }
             else if (w === 1) { canvas.width = 720; canvas.height = 720; }
             else { canvas.width = 1280; canvas.height = 720; }
-
             if (activeVideoElement) renderFrame();
             else drawPlaceholder();
         }
@@ -440,7 +376,7 @@
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
-
+            clipName = file.name;
             document.getElementById('mediaStatus').innerText = 'Yüklendi: ' + file.name;
 
             activeVideoElement = document.createElement('video');
@@ -449,27 +385,22 @@
             activeVideoElement.load();
 
             activeVideoElement.onloadedmetadata = () => {
-                clips = [{ id: 1, name: file.name, start: 0, duration: activeVideoElement.duration }];
-                selectedClipIndex = 0;
-                renderTimelineClips();
+                renderTimeline();
                 renderFrame();
             };
         }
 
         function renderFrame() {
             if (!activeVideoElement) return;
-
             ctx.save();
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            let filterStr = `brightness(${videoProps.brightness}%) contrast(${videoProps.contrast}%)`;
+            let filterStr = '';
             if (videoProps.filter === 'grayscale') filterStr += ' grayscale(100%)';
             if (videoProps.filter === 'invert') filterStr += ' invert(100%)';
-            if (videoProps.filter === 'blur') filterStr += ' blur(6px)';
-            if (videoProps.filter === 'sepia') filterStr += ' sepia(100%)';
             ctx.filter = filterStr;
 
-            ctx.translate((canvas.width / 2) + parseFloat(videoProps.posX), (canvas.height / 2) + parseFloat(videoProps.posY));
+            ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.scale(videoProps.scale, videoProps.scale);
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
@@ -487,7 +418,7 @@
         }
 
         function togglePlay() {
-            if (!activeVideoElement) return alert('Önce bir video yükleyin!');
+            if (!activeVideoElement) return alert('Önce video seçin!');
             isPlaying = !isPlaying;
             if (isPlaying) {
                 activeVideoElement.play();
@@ -501,8 +432,7 @@
 
         function seekVideo(val) {
             if (!activeVideoElement) return;
-            const targetTime = (val / 100) * activeVideoElement.duration;
-            activeVideoElement.currentTime = targetTime;
+            activeVideoElement.currentTime = (val / 100) * activeVideoElement.duration;
             renderFrame();
         }
 
@@ -511,9 +441,7 @@
             const cur = Math.floor(activeVideoElement.currentTime);
             const dur = Math.floor(activeVideoElement.duration || 0);
             document.getElementById('timeDisplay').innerText = `${cur}s / ${dur}s`;
-            
-            const progress = (activeVideoElement.currentTime / activeVideoElement.duration) * 100;
-            document.getElementById('seekSlider').value = progress || 0;
+            document.getElementById('seekSlider').value = (activeVideoElement.currentTime / activeVideoElement.duration) * 100 || 0;
         }
 
         function updateProp(prop, val) {
@@ -530,39 +458,13 @@
             if (activeVideoElement && !isPlaying) renderFrame();
         }
 
-        function renderTimelineClips() {
-            const track = document.getElementById('videoTrack');
-            track.innerHTML = '';
-            clips.forEach((clip, index) => {
-                const el = document.createElement('div');
-                el.className = `media-clip ${index === selectedClipIndex ? 'selected' : ''}`;
-                el.style.left = '0px';
-                el.style.width = '120px';
-                el.innerText = clip.name;
-                el.onclick = () => { selectedClipIndex = index; renderTimelineClips(); };
-                track.appendChild(el);
-            });
+        function renderTimeline() {
+            document.getElementById('videoTrack').innerHTML = `<div class="media-clip">${clipName}</div>`;
         }
 
-        function splitClip() {
-            if (!activeVideoElement) return;
-            const curTime = activeVideoElement.currentTime;
-            alert(`Video ${curTime.toFixed(1)}. saniyede ikiye bölündü!`);
-        }
-
-        function deleteSelectedClip() {
-            if (selectedClipIndex === -1) return alert('Lütfen silmek için bir klip seçin!');
-            clips.splice(selectedClipIndex, 1);
-            selectedClipIndex = -1;
-            renderTimelineClips();
-            alert('Seçili parça silindi!');
-        }
-
-        function runSpeechAI() {
-            alert('Türkçe AI Ses Tanıma çalıştırılıyor...');
-        }
-
-        function exportVideo() { alert('Kurgulanan video dışa aktarılıyor!'); }
+        function splitClip() { alert('Klip bölündü.'); }
+        function deleteClip() { activeVideoElement = null; drawPlaceholder(); document.getElementById('videoTrack').innerHTML = ''; alert('Klip silindi.'); }
+        function exportVideo() { alert('Dışa aktarılıyor...'); }
     </script>
 </body>
 </html>
