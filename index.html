@@ -8,7 +8,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="logo">StudioPro</div>
         <div class="header-actions">
@@ -19,7 +18,6 @@
 
     <div class="workspace">
         
-        <!-- Preview Screen -->
         <div class="preview-container">
             <div class="aspect-bar">
                 <button class="aspect-btn active" onclick="setAspect(9, 16, this)">9:16 TikTok</button>
@@ -32,14 +30,12 @@
             </div>
         </div>
 
-        <!-- Playback Controls -->
         <div class="playback-bar">
             <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
             <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1" oninput="seekVideo(this.value)">
             <span class="time-label" id="timeLabel">00:00 / 00:00</span>
         </div>
 
-        <!-- Timeline Section -->
         <div class="timeline-section">
             <div class="timeline-header">VİDEO KATI</div>
             <div class="tracks-viewport" id="timelineTrack">
@@ -47,20 +43,17 @@
             </div>
         </div>
 
-        <!-- VN Bottom Toolbar -->
         <div class="toolbar">
             <button class="tool-btn" onclick="splitClip()"><span>✂️</span>Böl</button>
-            <button class="tool-btn" onclick="alert('Filtreler aktif')"><span>✨</span>Filtre</button>
-            <button class="tool-btn" onclick="alert('Ses kontrolü')"><span>🔊</span>Ses</button>
+            <button class="tool-btn" onclick="applyFilter()"><span>✨</span>Filtrele</button>
+            <button class="tool-btn" onclick="alert('Ses seviyesi normal')"><span>🔊</span>Ses</button>
             <button class="tool-btn danger" onclick="deleteClip()"><span>🗑</span>Sil</button>
         </div>
 
     </div>
 
-    <!-- Hidden Input -->
     <input type="file" id="fileInput" style="display:none" accept="video/*" onchange="loadMedia(event)">
 
-    <!-- App Logic JS -->
     <script src="app.js"></script>
 </body>
 </html>
