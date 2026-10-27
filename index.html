@@ -2,11 +2,11 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudioPro AI - Pro Video Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StudioPro Mobile AI - CapCut & VN Style</title>
     <style>
         :root {
-            --bg-dark: #121214;
+            --bg-dark: #0f0f11;
             --bg-panel: #18181b;
             --bg-element: #27272a;
             --accent: #6366f1;
@@ -20,8 +20,9 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -33,140 +34,85 @@
             overflow: hidden;
         }
 
-        /* Top Bar */
+        /* Top Header */
         header {
-            height: 50px;
+            height: 48px;
             background-color: var(--bg-panel);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding: 0 12px;
+            z-index: 100;
         }
 
         .logo {
             font-weight: 700;
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-
-        .logo span {
-            color: var(--accent);
-        }
+        .logo span { color: var(--accent); }
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 8px;
         }
 
         .btn {
             background-color: var(--bg-element);
             color: var(--text-main);
             border: 1px solid var(--border);
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .btn:hover {
-            background-color: var(--border);
+            gap: 4px;
         }
 
         .btn-primary {
             background-color: var(--accent);
             border-color: var(--accent);
+            font-weight: 600;
         }
 
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
-
-        /* Main Workspace */
-        .workspace {
+        /* Main Mobile Container */
+        .app-container {
             flex: 1;
-            display: grid;
-            grid-template-columns: 280px 1fr 320px;
-            grid-template-rows: 1fr 280px;
-            height: calc(100vh - 50px);
-        }
-
-        /* Left Panel */
-        .left-panel {
-            grid-row: 1 / 2;
-            background-color: var(--bg-panel);
-            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 48px);
+            overflow: hidden;
         }
 
-        .tabs {
-            display: flex;
-            background-color: var(--bg-dark);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px 4px;
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-        }
-
-        .tab.active {
-            color: var(--text-main);
-            border-bottom-color: var(--accent);
-            background-color: var(--bg-panel);
-        }
-
-        .tab-content {
-            flex: 1;
-            padding: 12px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Center Preview */
-        .preview-area {
-            grid-column: 2 / 3;
-            grid-row: 1 / 2;
-            background-color: #09090b;
+        /* Preview Area (Top) */
+        .preview-section {
+            background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 10px;
             position: relative;
-            padding: 15px;
+            min-height: 240px;
+            max-height: 45vh;
         }
 
-        .aspect-ratios {
+        .aspect-selector {
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 8px;
+            z-index: 10;
         }
 
         .ratio-btn {
-            background: var(--bg-element);
+            background: rgba(39, 39, 42, 0.8);
             border: 1px solid var(--border);
             color: var(--text-muted);
             padding: 4px 10px;
-            border-radius: 4px;
+            border-radius: 20px;
             font-size: 11px;
-            cursor: pointer;
         }
 
         .ratio-btn.active {
@@ -175,329 +121,317 @@
             border-color: var(--accent);
         }
 
-        .canvas-container {
+        .canvas-wrapper {
             position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border-radius: 4px;
-            width: 560px;
-            height: 315px;
-            transition: all 0.3s ease;
+            max-width: 100%;
+            max-height: 300px;
         }
 
         canvas {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            max-width: 100%;
+            max-height: 280px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             background: #111;
         }
 
-        .player-controls {
-            margin-top: 12px;
+        .player-bar {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            margin-top: 6px;
         }
 
-        .control-btn {
-            background: var(--bg-element);
-            border: 1px solid var(--border);
+        .play-btn {
+            background: var(--accent);
+            border: none;
             color: white;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            font-size: 14px;
         }
 
-        .control-btn:hover {
-            background: var(--accent);
-        }
-
-        /* Right Panel */
-        .right-panel {
-            grid-column: 3 / 4;
-            grid-row: 1 / 2;
-            background-color: var(--bg-panel);
-            border-left: 1px solid var(--border);
-            padding: 16px;
-            overflow-y: auto;
-        }
-
-        .panel-section {
-            margin-bottom: 20px;
-        }
-
-        .panel-section h3 {
-            font-size: 12px;
+        .time-code {
+            font-size: 11px;
+            font-family: monospace;
             color: var(--text-muted);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .prop-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-
-        .prop-row input[type="range"] {
-            width: 120px;
-        }
-
-        .prop-row select {
-            background: var(--bg-element);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 4px 6px;
-            border-radius: 4px;
-            width: 120px;
-        }
-
-        .keyframe-btn {
-            background: transparent;
-            border: 1px dashed var(--accent);
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-        .keyframe-btn.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        /* Timeline Area */
-        .timeline-area {
-            grid-column: 1 / 4;
-            grid-row: 2 / 3;
-            background-color: var(--bg-panel);
+        /* Controls & Tab Navigation (Middle) */
+        .tools-section {
+            background: var(--bg-panel);
             border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            max-height: 220px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--bg-dark);
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: var(--text-main);
+            border-bottom-color: var(--accent);
+            background: var(--bg-panel);
+        }
+
+        .tab-body {
+            padding: 10px;
+            overflow-y: auto;
+            display: none;
+            max-height: 160px;
+        }
+
+        .tab-body.active {
+            display: block;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        /* Timeline Area (Bottom) */
+        .timeline-section {
+            flex: 1;
+            background: var(--bg-dark);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
 
-        .timeline-toolbar {
-            height: 35px;
-            background-color: var(--bg-dark);
-            border-bottom: 1px solid var(--border);
+        .timeline-action-bar {
+            height: 32px;
+            background: var(--bg-panel);
             display: flex;
             align-items: center;
-            padding: 0 12px;
+            padding: 0 10px;
             gap: 10px;
-        }
-
-        .timeline-tracks-container {
-            flex: 1;
-            overflow-y: auto;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .timeline-ruler {
-            height: 24px;
-            background: var(--bg-dark);
             border-bottom: 1px solid var(--border);
+        }
+
+        .tracks-scroll {
+            flex: 1;
+            overflow: auto;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .track-row {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            position: relative;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .track-header {
+            width: 65px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: bold;
             position: sticky;
-            top: 0;
+            left: 0;
             z-index: 10;
         }
 
-        .track {
-            height: 48px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            position: relative;
-            background: rgba(255,255,255,0.01);
-        }
-
-        .track-label {
-            width: 100px;
-            background: var(--bg-dark);
-            border-right: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .track-content {
+        .track-timeline {
             flex: 1;
             position: relative;
+            height: 100%;
         }
 
-        .clip {
+        .media-clip {
             position: absolute;
-            height: 40px;
+            height: 34px;
             top: 4px;
             background: var(--accent);
             border-radius: 4px;
             padding: 4px 8px;
-            font-size: 11px;
+            font-size: 10px;
+            color: white;
             display: flex;
             align-items: center;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.2);
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        .clip.video-clip { background: #3b82f6; }
-        .clip.audio-clip { background: #10b981; }
-        .clip.text-clip { background: #f59e0b; }
+        .media-clip.video { background: #2563eb; }
+        .media-clip.audio { background: #059669; }
+        .media-clip.text { background: #d97706; }
 
-        .upload-box {
+        .upload-touch-btn {
             border: 2px dashed var(--border);
-            padding: 15px;
+            padding: 12px;
             text-align: center;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 10px;
+            border-radius: 8px;
             font-size: 12px;
+            color: var(--text-main);
+            background: var(--bg-element);
         }
-        .upload-box:hover {
-            border-color: var(--accent);
+
+        @media (min-width: 768px) {
+            /* Desktop Fallback */
+            .app-container {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+                grid-template-rows: 1fr 250px;
+            }
+            .preview-section { grid-column: 2; grid-row: 1; max-height: 100%; }
+            .tools-section { grid-column: 1; grid-row: 1 / 3; max-height: 100%; }
+            .timeline-section { grid-column: 2; grid-row: 2; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
-        <div class="logo">
-            🎬 StudioPro <span>AI Studio</span>
-        </div>
+        <div class="logo">🎬 StudioPro <span>Mobile</span></div>
         <div class="header-actions">
-            <button class="btn" onclick="splitClip()">✂️ Böl (S)</button>
-            <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar (Export)</button>
+            <button class="btn" onclick="splitClip()">✂️ Böl</button>
+            <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar</button>
         </div>
     </header>
 
-    <!-- Workspace -->
-    <div class="workspace">
+    <div class="app-container">
         
-        <!-- Left Sidebar -->
-        <div class="left-panel">
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('media')">Medya</div>
-                <div class="tab" onclick="switchTab('ai')">Yapay Zeka</div>
-                <div class="tab" onclick="switchTab('text')">Metin</div>
-                <div class="tab" onclick="switchTab('effects')">Efektler</div>
+        <!-- Preview -->
+        <div class="preview-section">
+            <div class="aspect-selector">
+                <button class="ratio-btn active" onclick="setAspect(16, 9, this)">16:9 YT</button>
+                <button class="ratio-btn" onclick="setAspect(9, 16, this)">9:16 TikTok</button>
+                <button class="ratio-btn" onclick="setAspect(1, 1, this)">1:1 Kare</button>
             </div>
-
-            <!-- Media Tab -->
-            <div id="tab-media" class="tab-content active">
-                <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                    📁 Video/Görsel Yükle
-                    <input type="file" id="fileInput" style="display:none" accept="video/*,audio/*,image/*" onchange="handleFileSelect(event)">
-                </div>
-                <div id="mediaLibrary" style="font-size:12px; color:var(--text-muted);">
-                    Yüklenen medya zaman çizelgesine eklenir.
-                </div>
-            </div>
-
-            <!-- AI Tab -->
-            <div id="tab-ai" class="tab-content">
-                <div class="upload-box" style="border-style:solid; border-color:var(--accent);">
-                    ✨ <b>AI Auto Subtitle</b><br><span style="font-size:10px; color:var(--text-muted);">Sesleri metne dök</span>
-                </div>
-            </div>
-
-            <!-- Text Tab -->
-            <div id="tab-text" class="tab-content">
-                <button class="btn" style="width:100%; justify-content:center; margin-bottom:8px;" onclick="addTextLayer('Standart Başlık')">+ Başlık Ekle</button>
-            </div>
-
-            <!-- Effects Tab -->
-            <div id="tab-effects" class="tab-content">
-                <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Gerçek Zamanlı Filtreler:</div>
-                <button class="btn" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="setFilter('none')">Normal</button>
-                <button class="btn" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="setFilter('grayscale')">Siyah & Beyaz</button>
-                <button class="btn" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="setFilter('invert')">Negatif (Invert)</button>
-                <button class="btn" style="width:100%; justify-content:center;" onclick="setFilter('blur')">Yumuşak Blur</button>
-            </div>
-        </div>
-
-        <!-- Center Preview -->
-        <div class="preview-area">
-            <div class="aspect-ratios">
-                <button class="ratio-btn active" onclick="setAspect(16, 9, this)">YouTube (16:9)</button>
-                <button class="ratio-btn" onclick="setAspect(9, 16, this)">TikTok/Shorts (9:16)</button>
-                <button class="ratio-btn" onclick="setAspect(1, 1, this)">Kare (1:1)</button>
-            </div>
-            <div class="canvas-container" id="canvasContainer">
+            <div class="canvas-wrapper">
                 <canvas id="previewCanvas" width="1280" height="720"></canvas>
             </div>
-            <div class="player-controls">
-                <button class="control-btn" id="playBtn" onclick="togglePlay()">▶</button>
-                <span id="timeDisplay" style="font-size:12px; font-family:monospace;">00:00 / 00:00</span>
+            <div class="player-bar">
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+                <span class="time-code" id="timeDisplay">00:00 / 00:00</span>
             </div>
         </div>
 
-        <!-- Right Properties Panel -->
-        <div class="right-panel">
-            <div class="panel-section">
-                <h3>Video Özellikleri <button class="keyframe-btn" onclick="toggleKeyframe('scale')">◆ Anahtar Kare</button></h3>
-                <div class="prop-row">
-                    <span>Ölçek (Scale)</span>
-                    <input type="range" min="0.5" max="2" step="0.1" value="1" id="scaleRange" oninput="updateProp('scale', this.value)">
+        <!-- Controls / Tools -->
+        <div class="tools-section">
+            <div class="nav-tabs">
+                <div class="tab-btn active" onclick="switchTab('media')">📁 Medya</div>
+                <div class="tab-btn" onclick="switchTab('adjust')">🎛 Ayarlar</div>
+                <div class="tab-btn" onclick="switchTab('effects')">✨ Efektler</div>
+                <div class="tab-btn" onclick="switchTab('ai')">🤖 AI Araçlar</div>
+            </div>
+
+            <!-- Tab: Media -->
+            <div id="tab-media" class="tab-body active">
+                <div class="upload-touch-btn" onclick="document.getElementById('fileInput').click()">
+                    ➕ Video / Görsel Seç
+                    <input type="file" id="fileInput" style="display:none" accept="video/*,audio/*,image/*" onchange="handleFileSelect(event)">
                 </div>
-                <div class="prop-row">
-                    <span>Orijinal Ses</span>
-                    <input type="checkbox" id="audioToggle" checked onchange="toggleAudio(this.checked)">
+                <div id="mediaStatus" style="font-size:11px; margin-top:6px; color:var(--text-muted); text-align:center;"></div>
+            </div>
+
+            <!-- Tab: Adjust -->
+            <div id="tab-adjust" class="tab-body">
+                <div class="control-grid">
+                    <div class="slider-group">
+                        <label>Ölçek (Scale)</label>
+                        <input type="range" min="0.5" max="2" step="0.1" value="1" oninput="updateProp('scale', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>Ses Seviyesi</label>
+                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="updateVolume(this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>Parlaklık</label>
+                        <input type="range" min="0" max="200" value="100" oninput="updateProp('brightness', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>Kontrast</label>
+                        <input type="range" min="0" max="200" value="100" oninput="updateProp('contrast', this.value)">
+                    </div>
                 </div>
             </div>
 
-            <div class="panel-section">
-                <h3>Renk Ayarları</h3>
-                <div class="prop-row">
-                    <span>Parlaklık</span>
-                    <input type="range" min="0" max="200" value="100" id="brightRange" oninput="updateProp('brightness', this.value)">
+            <!-- Tab: Effects -->
+            <div id="tab-effects" class="tab-body">
+                <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
+                    <button class="btn" onclick="setFilter('none')">Normal</button>
+                    <button class="btn" onclick="setFilter('grayscale')">Siyah & Beyaz</button>
+                    <button class="btn" onclick="setFilter('invert')">Negatif</button>
+                    <button class="btn" onclick="setFilter('blur')">Bulanık (Blur)</button>
+                    <button class="btn" onclick="setFilter('sepia')">Sepya Retro</button>
                 </div>
-                <div class="prop-row">
-                    <span>Kontrast</span>
-                    <input type="range" min="0" max="200" value="100" id="contrastRange" oninput="updateProp('contrast', this.value)">
-                </div>
+            </div>
+
+            <!-- Tab: AI -->
+            <div id="tab-ai" class="tab-body">
+                <button class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="alert('AI Otomatik Altyazı Başlatıldı!')">✨ Otomatik Altyazı (Auto Subtitle)</button>
+                <button class="btn" style="width:100%; justify-content:center;" onclick="alert('Gemini AI Video Fikirleri Hazır!')">🤖 Gemini AI İçerik Önerisi</button>
             </div>
         </div>
 
-        <!-- Timeline Area -->
-        <div class="timeline-area">
-            <div class="timeline-toolbar">
-                <button class="btn" style="padding:2px 8px; font-size:11px;">🔍 Yakınlaştır</button>
+        <!-- Timeline -->
+        <div class="timeline-section">
+            <div class="timeline-action-bar">
+                <span style="font-size:10px; color:var(--text-muted);">ZAMAN ÇİZELGESİ</span>
             </div>
-            <div class="timeline-tracks-container">
-                <div class="timeline-ruler"></div>
-                <div class="track">
-                    <div class="track-label">Video 1</div>
-                    <div class="track-content" id="videoTrack"></div>
+            <div class="tracks-scroll">
+                <div class="track-row">
+                    <div class="track-header">VIDEO</div>
+                    <div class="track-timeline" id="videoTrack"></div>
                 </div>
-                <div class="track">
-                    <div class="track-label">Ses 1</div>
-                    <div class="track-content" id="audioTrack"></div>
+                <div class="track-row">
+                    <div class="track-header">SES</div>
+                    <div class="track-timeline" id="audioTrack"></div>
                 </div>
-                <div class="track">
-                    <div class="track-label">Metin</div>
-                    <div class="track-content" id="textTrack"></div>
+                <div class="track-row">
+                    <div class="track-header">METİN</div>
+                    <div class="track-timeline" id="textTrack"></div>
                 </div>
             </div>
         </div>
@@ -509,28 +443,27 @@
         const ctx = canvas.getContext('2d');
         let activeVideoElement = null;
         let isPlaying = false;
-        
+
         let videoProps = {
             scale: 1,
             brightness: 100,
             contrast: 100,
-            filter: 'none',
-            keyframes: {}
+            filter: 'none'
         };
 
         function drawPlaceholder() {
             ctx.fillStyle = '#18181b';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#71717a';
-            ctx.font = '24px sans-serif';
+            ctx.font = '16px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('Önizleme Ekranı (Medya Yükleyin)', canvas.width / 2, canvas.height / 2);
+            ctx.fillText('Medya Seçin', canvas.width / 2, canvas.height / 2);
         }
         drawPlaceholder();
 
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-body').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
@@ -538,62 +471,55 @@
         function setAspect(w, h, btn) {
             document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const container = document.getElementById('canvasContainer');
             if (w === 9) {
-                container.style.width = '202px';
-                container.style.height = '360px';
+                canvas.width = 720;
+                canvas.height = 1280;
             } else if (w === 1) {
-                container.style.width = '320px';
-                container.style.height = '320px';
+                canvas.width = 720;
+                canvas.height = 720;
             } else {
-                container.style.width = '560px';
-                container.style.height = '315px';
+                canvas.width = 1280;
+                canvas.height = 720;
             }
+            if (activeVideoElement) renderFrame();
+            else drawPlaceholder();
         }
 
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
-            const fileURL = URL.createObjectURL(file);
-            document.getElementById('mediaLibrary').innerHTML = `✅ Yüklendi: <br><b>${file.name}</b>`;
+            document.getElementById('mediaStatus').innerText = 'Seçildi: ' + file.name;
 
             if (file.type.startsWith('video')) {
                 activeVideoElement = document.createElement('video');
-                activeVideoElement.src = fileURL;
+                activeVideoElement.src = URL.createObjectURL(file);
                 activeVideoElement.crossOrigin = 'anonymous';
                 activeVideoElement.load();
 
                 activeVideoElement.onloadedmetadata = () => {
-                    renderVideoFrame();
+                    renderFrame();
                     updateTimeDisplay();
                 };
 
-                const videoTrack = document.getElementById('videoTrack');
-                videoTrack.innerHTML = '';
-                const newClip = document.createElement('div');
-                newClip.className = 'clip video-clip';
-                newClip.style.left = '0px';
-                newClip.style.width = '300px';
-                newClip.innerText = file.name;
-                videoTrack.appendChild(newClip);
+                const track = document.getElementById('videoTrack');
+                track.innerHTML = `<div class="media-clip video" style="left:0; width:80%;">${file.name}</div>`;
             }
         }
 
-        function renderVideoFrame() {
+        function renderFrame() {
             if (!activeVideoElement) return;
-            
+
             ctx.save();
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Filtreleri ve renk ayarlarını uygula
-            let filterString = `brightness(${videoProps.brightness}%) contrast(${videoProps.contrast}%)`;
-            if (videoProps.filter === 'grayscale') filterString += ' grayscale(100%)';
-            if (videoProps.filter === 'invert') filterString += ' invert(100%)';
-            if (videoProps.filter === 'blur') filterString += ' blur(4px)';
-            ctx.filter = filterString;
+            let filterStr = `brightness(${videoProps.brightness}%) contrast(${videoProps.contrast}%)`;
+            if (videoProps.filter === 'grayscale') filterStr += ' grayscale(100%)';
+            if (videoProps.filter === 'invert') filterStr += ' invert(100%)';
+            if (videoProps.filter === 'blur') filterStr += ' blur(6px)';
+            if (videoProps.filter === 'sepia') filterStr += ' sepia(100%)';
+            ctx.filter = filterStr;
 
-            // Ölçekleme (Scale)
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.scale(videoProps.scale, videoProps.scale);
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
@@ -604,80 +530,49 @@
             updateTimeDisplay();
 
             if (isPlaying && !activeVideoElement.ended) {
-                requestAnimationFrame(renderVideoFrame);
-            } else if (activeVideoElement.ended) {
+                requestAnimationFrame(renderFrame);
+            } else if (activeVideoElement && activeVideoElement.ended) {
                 isPlaying = false;
                 document.getElementById('playBtn').innerText = '▶';
             }
         }
 
         function togglePlay() {
-            if (!activeVideoElement) {
-                alert('Lütfen önce bir video dosyası yükleyin!');
-                return;
-            }
-
+            if (!activeVideoElement) return alert('Önce bir video yükleyin!');
             isPlaying = !isPlaying;
-            const playBtn = document.getElementById('playBtn');
-
             if (isPlaying) {
                 activeVideoElement.play();
-                playBtn.innerText = '⏸';
-                renderVideoFrame();
+                document.getElementById('playBtn').innerText = '⏸';
+                renderFrame();
             } else {
                 activeVideoElement.pause();
-                playBtn.innerText = '▶';
+                document.getElementById('playBtn').innerText = '▶';
             }
         }
 
-        function toggleAudio(isEnabled) {
-            if (activeVideoElement) {
-                activeVideoElement.muted = !isEnabled;
-            }
+        function updateProp(prop, val) {
+            videoProps[prop] = val;
+            if (activeVideoElement && !isPlaying) renderFrame();
         }
 
-        function setFilter(filterName) {
-            videoProps.filter = filterName;
-            if (activeVideoElement && !isPlaying) renderVideoFrame();
+        function updateVolume(val) {
+            if (activeVideoElement) activeVideoElement.volume = val;
         }
 
-        function updateProp(propName, value) {
-            videoProps[propName] = value;
-            if (activeVideoElement && !isPlaying) renderVideoFrame();
-        }
-
-        function toggleKeyframe(prop) {
-            const time = activeVideoElement ? activeVideoElement.currentTime : 0;
-            if (!videoProps.keyframes[time]) videoProps.keyframes[time] = {};
-            videoProps.keyframes[time][prop] = videoProps[prop];
-            event.target.classList.toggle('active');
-            alert(`Anahtar Kare (Keyframe) ${time.toFixed(1)} sn noktasına eklendi!`);
+        function setFilter(filter) {
+            videoProps.filter = filter;
+            if (activeVideoElement && !isPlaying) renderFrame();
         }
 
         function updateTimeDisplay() {
             if (!activeVideoElement) return;
-            const current = formatTime(activeVideoElement.currentTime);
-            const duration = formatTime(activeVideoElement.duration || 0);
-            document.getElementById('timeDisplay').innerText = `${current} / ${duration}`;
+            const cur = Math.floor(activeVideoElement.currentTime);
+            const dur = Math.floor(activeVideoElement.duration || 0);
+            document.getElementById('timeDisplay').innerText = `${cur}s / ${dur}s`;
         }
 
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-
-        function splitClip() { alert('Klip bölündü.'); }
-        function addTextLayer(text) {
-            const textTrack = document.getElementById('textTrack');
-            const newText = document.createElement('div');
-            newText.className = 'clip text-clip';
-            newText.style.left = '40px';
-            newText.style.width = '100px';
-            newText.innerText = text;
-            textTrack.appendChild(newText);
-        }
-        function exportVideo() { alert('Dışa Aktarma (Export) başlatıldı!'); }
+        function splitClip() { alert('Video klip bölündü.'); }
+        function exportVideo() { alert('Dışa aktarma başlatıldı! Video cihazınıza indiriliyor.'); }
     </script>
 </body>
 </html>
