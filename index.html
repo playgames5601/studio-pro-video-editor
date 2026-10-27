@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>StudioPro - Video Editor</title>
+    <title>StudioPro - Professional Mobile Video Editor</title>
     <style>
         :root {
-            --bg-dark: #0f0f11;
-            --bg-panel: #18181b;
-            --bg-element: #27272a;
-            --accent: #6366f1;
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --border: #3f3f46;
+            --bg-main: #000000;
+            --bg-panel: #121214;
+            --bg-card: #1c1c1e;
+            --accent: #2563eb;
+            --accent-gold: #f59e0b;
+            --text-main: #ffffff;
+            --text-sub: #a1a1aa;
+            --border: #27272a;
             --danger: #ef4444;
         }
 
@@ -26,7 +27,7 @@
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-main);
             color: var(--text-main);
             height: 100vh;
             display: flex;
@@ -34,6 +35,7 @@
             overflow: hidden;
         }
 
+        /* Top Navigation Header */
         header {
             height: 48px;
             background-color: var(--bg-panel);
@@ -43,66 +45,94 @@
             justify-content: space-between;
             padding: 0 12px;
             flex-shrink: 0;
+            z-index: 50;
         }
 
-        .logo { font-weight: 700; font-size: 16px; color: var(--text-main); }
-        .header-actions { display: flex; gap: 6px; }
+        .brand-title {
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
 
-        .btn {
-            background-color: var(--bg-element);
+        .header-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .top-btn {
+            background-color: var(--bg-card);
             color: var(--text-main);
             border: 1px solid var(--border);
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-size: 11px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        .btn-danger { background-color: var(--danger); border-color: var(--danger); }
-        .btn-primary { background-color: var(--accent); border-color: var(--accent); font-weight: 600; }
+        .top-btn-primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
 
-        .app-container {
+        /* Main Workspace */
+        .editor-workspace {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
 
-        .preview-section {
-            background: #000;
+        /* Player & Aspect Ratio Area */
+        .preview-container {
+            flex: 1;
+            background: #050505;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 8px;
-            height: 45vh;
-            flex-shrink: 0;
             position: relative;
+            padding: 10px;
+            min-height: 40vh;
         }
 
-        .aspect-selector { 
-            display: flex; 
-            gap: 6px; 
-            margin-bottom: 6px;
+        .aspect-bar {
+            position: absolute;
+            top: 10px;
+            display: flex;
+            gap: 6px;
+            background: rgba(28, 28, 30, 0.8);
+            padding: 4px 8px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            z-index: 20;
         }
 
-        .ratio-btn {
-            background: var(--bg-element);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 4px 10px;
+        .aspect-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            padding: 4px 8px;
             border-radius: 12px;
             font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        .ratio-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .aspect-btn.active {
+            background: var(--text-main);
+            color: #000;
+        }
 
-        .canvas-wrapper {
+        .viewport-wrapper {
             width: 100%;
-            height: 220px;
+            height: 100%;
+            max-height: 38vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -112,359 +142,502 @@
         canvas {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border-radius: 6px;
             background: #000;
         }
 
-        .player-bar {
+        /* Playback Bar (Under Player) */
+        .playback-bar {
+            height: 36px;
+            width: 100%;
+            background: var(--bg-panel);
             display: flex;
             align-items: center;
-            gap: 10px;
-            width: 100%;
-            padding: 8px 12px 0 12px;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
-        .play-btn {
+        .play-trigger-btn {
             background: var(--accent);
             border: none;
             color: white;
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .seek-slider {
-            flex: 1;
-            accent-color: var(--accent);
-            height: 4px;
-        }
-
-        .time-code { 
-            font-size: 10px; 
-            font-family: monospace; 
-            color: var(--text-muted); 
-            min-width: 60px;
-            text-align: right;
-        }
-
-        .tools-section {
-            background: var(--bg-panel);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            height: 20vh;
-            flex-shrink: 0;
-        }
-
-        .nav-tabs {
-            display: flex;
-            background: var(--bg-dark);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 8px 4px;
-            text-align: center;
             font-size: 11px;
-            color: var(--text-muted);
-            border-bottom: 2px solid transparent;
+            cursor: pointer;
         }
 
-        .tab-btn.active { color: var(--text-main); border-bottom-color: var(--accent); background: var(--bg-panel); }
+        .timestamp-label {
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--text-sub);
+        }
 
-        .tab-body { padding: 10px; overflow-y: auto; display: none; height: 100%; }
-        .tab-body.active { display: block; }
-
-        .control-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .slider-group { display: flex; flex-direction: column; gap: 2px; font-size: 10px; }
-        .slider-group input[type="range"] { width: 100%; accent-color: var(--accent); }
-
-        .timeline-section {
-            flex: 1;
-            background: var(--bg-dark);
+        /* Timeline Area (VN Style) */
+        .timeline-container {
+            height: 160px;
+            background: var(--bg-main);
+            position: relative;
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
             overflow: hidden;
         }
 
-        .timeline-header {
-            height: 24px;
-            background: var(--bg-panel);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            font-size: 10px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
+        .playhead-center-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ffffff;
+            z-index: 30;
+            pointer-events: none;
+            box-shadow: 0 0 6px rgba(255,255,255,0.8);
         }
 
-        .tracks-scroll {
+        .tracks-viewport {
             flex: 1;
-            overflow: auto;
-            padding: 6px 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            position: relative;
+            padding: 12px 50vw; /* Playhead centers clips */
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .track-row {
-            height: 38px;
+        .timeline-track {
+            height: 36px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+            position: relative;
+            min-width: 1200px;
+        }
+
+        .clip-item {
+            position: absolute;
+            height: 100%;
+            background: #2563eb;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.4);
             display: flex;
             align-items: center;
-            margin-bottom: 4px;
-            background: rgba(255,255,255,0.02);
+            padding: 0 8px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
-        .track-header {
-            width: 55px;
+        .clip-item.selected {
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 10px rgba(37,99,235,0.8);
+        }
+
+        /* VN Style Bottom Action Toolbar */
+        .action-toolbar-scroll {
+            height: 60px;
             background: var(--bg-panel);
-            border-right: 1px solid var(--border);
-            height: 100%;
+            border-top: 1px solid var(--border);
             display: flex;
+            align-items: center;
+            overflow-x: auto;
+            padding: 0 8px;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .tool-item {
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 9px;
-            color: var(--text-muted);
-            font-weight: bold;
-        }
-
-        .track-timeline { flex: 1; position: relative; height: 100%; }
-
-        .media-clip {
-            position: absolute;
-            height: 30px;
-            top: 4px;
-            left: 4px;
-            background: var(--accent);
-            border-radius: 4px;
-            padding: 2px 8px;
+            min-width: 54px;
+            height: 48px;
+            color: var(--text-sub);
+            cursor: pointer;
             font-size: 10px;
-            color: white;
-            display: flex;
-            align-items: center;
+            gap: 4px;
         }
 
-        .upload-touch-btn {
-            border: 2px dashed var(--border);
-            padding: 8px;
-            text-align: center;
-            border-radius: 6px;
+        .tool-item.active, .tool-item:active {
+            color: var(--text-main);
+        }
+
+        .tool-icon {
+            font-size: 18px;
+        }
+
+        /* Bottom Drawer / Properties Panel */
+        .property-drawer {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            padding: 12px;
+            display: none;
+            z-index: 40;
+        }
+
+        .property-drawer.open {
+            display: block;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-sub);
+        }
+
+        .drawer-close {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .controls-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .slider-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             font-size: 11px;
-            background: var(--bg-element);
+        }
+
+        .slider-box input[type="range"] {
+            accent-color: var(--accent);
+            width: 100%;
+        }
+
+        .empty-upload-card {
+            border: 2px dashed var(--border);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-sub);
+            cursor: pointer;
+            background: var(--bg-card);
         }
     </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header>
-        <div class="logo">StudioPro</div>
-        <div class="header-actions">
-            <button class="btn" onclick="splitClip()">✂️ Böl</button>
-            <button class="btn btn-danger" onclick="deleteClip()">🗑 Sil</button>
-            <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar</button>
+        <div class="brand-title">StudioPro</div>
+        <div class="header-btn-group">
+            <button class="top-btn" onclick="openMediaSelector()">➕ Medya</button>
+            <button class="top-btn top-btn-primary" onclick="exportVideo()">🚀 Dışa Aktar</button>
         </div>
     </header>
 
-    <div class="app-container">
+    <div class="editor-workspace">
         
-        <div class="preview-section">
-            <div class="aspect-selector">
-                <button class="ratio-btn" onclick="setAspect(16, 9, this)">16:9 YT</button>
-                <button class="ratio-btn active" onclick="setAspect(9, 16, this)">9:16 TikTok</button>
-                <button class="ratio-btn" onclick="setAspect(1, 1, this)">1:1 Kare</button>
+        <!-- Preview Player -->
+        <div class="preview-container">
+            <div class="aspect-bar">
+                <button class="aspect-btn active" onclick="setAspectRatio(9, 16, this)">9:16 TikTok</button>
+                <button class="aspect-btn" onclick="setAspectRatio(16, 9, this)">16:9 YT</button>
+                <button class="aspect-btn" onclick="setAspectRatio(1, 1, this)">1:1 Kare</button>
             </div>
 
-            <div class="canvas-wrapper">
-                <canvas id="previewCanvas" width="720" height="1280"></canvas>
-            </div>
-
-            <div class="player-bar">
-                <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-                <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1" oninput="seekVideo(this.value)">
-                <span class="time-code" id="timeDisplay">00:00 / 00:00</span>
+            <div class="viewport-wrapper">
+                <canvas id="mainCanvas" width="720" height="1280"></canvas>
             </div>
         </div>
 
-        <div class="tools-section">
-            <div class="nav-tabs">
-                <div class="tab-btn active" onclick="switchTab('media')">📁 Medya</div>
-                <div class="tab-btn" onclick="switchTab('adjust')">🎛 Özelleştir</div>
-                <div class="tab-btn" onclick="switchTab('effects')">✨ Efektler</div>
-            </div>
+        <!-- Playback Controller -->
+        <div class="playback-bar">
+            <button class="play-trigger-btn" id="playBtn" onclick="togglePlay()">▶</button>
+            <div class="timestamp-label" id="timeDisplay">00:00 / 00:00</div>
+        </div>
 
-            <div id="tab-media" class="tab-body active">
-                <div class="upload-touch-btn" onclick="document.getElementById('fileInput').click()">
-                    ➕ Video Seç
-                    <input type="file" id="fileInput" style="display:none" accept="video/*" onchange="handleFileSelect(event)">
-                </div>
-                <div id="mediaStatus" style="font-size:10px; margin-top:4px; color:var(--text-muted); text-align:center;"></div>
-            </div>
-
-            <div id="tab-adjust" class="tab-body">
-                <div class="control-grid">
-                    <div class="slider-group">
-                        <label>Ölçek (Boyut)</label>
-                        <input type="range" min="0.2" max="3" step="0.1" value="1" oninput="updateProp('scale', this.value)">
-                    </div>
-                    <div class="slider-group">
-                        <label>Ses Seviyesi</label>
-                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="updateVolume(this.value)">
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-effects" class="tab-body">
-                <div style="display:flex; gap:6px;">
-                    <button class="btn" onclick="setFilter('none')">Normal</button>
-                    <button class="btn" onclick="setFilter('grayscale')">Siyah-Beyaz</button>
-                    <button class="btn" onclick="setFilter('invert')">Negatif</button>
+        <!-- Timeline Track View -->
+        <div class="timeline-container">
+            <div class="playhead-center-line"></div>
+            <div class="tracks-viewport" id="tracksViewport" onscroll="syncTimelineScroll()">
+                <div class="timeline-track" id="videoTrack">
+                    <!-- Media Clips Rendered Here -->
                 </div>
             </div>
         </div>
 
-        <div class="timeline-section">
-            <div class="timeline-header">ZAMAN ÇİZELGESİ</div>
-            <div class="tracks-scroll">
-                <div class="track-row">
-                    <div class="track-header">VİDEO</div>
-                    <div class="track-timeline" id="videoTrack"></div>
-                </div>
+        <!-- Bottom Action Drawer -->
+        <div class="property-drawer" id="propDrawer">
+            <div class="drawer-header">
+                <span id="drawerTitle">Video Ayarları</span>
+                <span class="drawer-close" onclick="closeDrawer()">✕</span>
+            </div>
+            <div id="drawerContent"></div>
+        </div>
+
+        <!-- VN Bottom Toolbar -->
+        <div class="action-toolbar-scroll">
+            <div class="tool-item" onclick="openDrawer('transform')">
+                <span class="tool-icon">🔍</span>
+                <span>Boyut/Konum</span>
+            </div>
+            <div class="tool-item" onclick="splitCurrentClip()">
+                <span class="tool-icon">✂️</span>
+                <span>Böl</span>
+            </div>
+            <div class="tool-item" onclick="openDrawer('effects')">
+                <span class="tool-icon">✨</span>
+                <span>Filtre/FX</span>
+            </div>
+            <div class="tool-item" onclick="openDrawer('ai')">
+                <span class="tool-icon">🤖</span>
+                <span>AI Altyazı</span>
+            </div>
+            <div class="tool-item" onclick="deleteCurrentClip()">
+                <span class="tool-icon">🗑</span>
+                <span>Sil</span>
             </div>
         </div>
 
     </div>
 
-    <script>
-        const canvas = document.getElementById('previewCanvas');
-        const ctx = canvas.getContext('2d');
-        let activeVideoElement = null;
-        let isPlaying = false;
-        let videoProps = { scale: 1, filter: 'none' };
-        let clipName = '';
+    <!-- Hidden Input File -->
+    <input type="file" id="mediaFileInput" style="display:none" accept="video/*" onchange="handleFileSelected(event)">
 
-        function drawPlaceholder() {
-            ctx.fillStyle = '#000';
+    <script>
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        let activeVideo = null;
+        let isPlaying = false;
+
+        let videoTransform = {
+            scale: 1.0,
+            x: 0,
+            y: 0,
+            filter: 'none'
+        };
+
+        let loadedClip = null;
+
+        function renderInitialState() {
+            ctx.fillStyle = '#050505';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#71717a';
-            ctx.font = '14px sans-serif';
+            ctx.font = '16px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('Medya Seçin', canvas.width / 2, canvas.height / 2);
+            ctx.fillText('Medya Ekle Butonuna Basın', canvas.width / 2, canvas.height / 2);
         }
-        drawPlaceholder();
+        renderInitialState();
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-body').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
+        function openMediaSelector() {
+            document.getElementById('mediaFileInput').click();
         }
 
-        function setAspect(w, h, btn) {
-            document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            if (w === 9) { canvas.width = 720; canvas.height = 1280; }
-            else if (w === 1) { canvas.width = 720; canvas.height = 720; }
-            else { canvas.width = 1280; canvas.height = 720; }
-            if (activeVideoElement) renderFrame();
-            else drawPlaceholder();
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
+        function handleFileSelected(event) {
+            const file = event.target.files[0];
             if (!file) return;
-            clipName = file.name;
-            document.getElementById('mediaStatus').innerText = 'Yüklendi: ' + file.name;
 
-            activeVideoElement = document.createElement('video');
-            activeVideoElement.src = URL.createObjectURL(file);
-            activeVideoElement.crossOrigin = 'anonymous';
-            activeVideoElement.load();
+            activeVideo = document.createElement('video');
+            activeVideo.src = URL.createObjectURL(file);
+            activeVideo.crossOrigin = 'anonymous';
+            activeVideo.load();
 
-            activeVideoElement.onloadedmetadata = () => {
-                renderTimeline();
-                renderFrame();
+            activeVideo.onloadedmetadata = () => {
+                loadedClip = { name: file.name, duration: activeVideo.duration };
+                renderTrackClip();
+                renderVideoCanvas();
             };
         }
 
-        function renderFrame() {
-            if (!activeVideoElement) return;
+        function setAspectRatio(w, h, btnElement) {
+            document.querySelectorAll('.aspect-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            if (w === 9) { canvas.width = 720; canvas.height = 1280; }
+            else if (w === 16) { canvas.width = 1280; canvas.height = 720; }
+            else { canvas.width = 720; canvas.height = 720; }
+
+            if (activeVideo) renderVideoCanvas();
+            else renderInitialState();
+        }
+
+        function renderVideoCanvas() {
+            if (!activeVideo) return;
+
             ctx.save();
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // Apply Filters
             let filterStr = '';
-            if (videoProps.filter === 'grayscale') filterStr += ' grayscale(100%)';
-            if (videoProps.filter === 'invert') filterStr += ' invert(100%)';
+            if (videoTransform.filter === 'grayscale') filterStr = 'grayscale(100%)';
+            if (videoTransform.filter === 'invert') filterStr = 'invert(100%)';
+            if (videoTransform.filter === 'sepia') filterStr = 'sepia(100%)';
             ctx.filter = filterStr;
 
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.scale(videoProps.scale, videoProps.scale);
-            ctx.translate(-canvas.width / 2, -canvas.height / 2);
+            // Apply Fit-to-Canvas + Custom Scale/Position
+            const vWidth = activeVideo.videoWidth || canvas.width;
+            const vHeight = activeVideo.videoHeight || canvas.height;
+            const scaleFactor = Math.min(canvas.width / vWidth, canvas.height / vHeight) * videoTransform.scale;
 
-            ctx.drawImage(activeVideoElement, 0, 0, canvas.width, canvas.height);
+            const drawW = vWidth * scaleFactor;
+            const drawH = vHeight * scaleFactor;
+            const drawX = (canvas.width - drawW) / 2 + parseFloat(videoTransform.x);
+            const drawY = (canvas.height - drawH) / 2 + parseFloat(videoTransform.y);
+
+            ctx.drawImage(activeVideo, drawX, drawY, drawW, drawH);
             ctx.restore();
 
-            updateTimeDisplay();
+            updatePlaybackTime();
 
-            if (isPlaying && !activeVideoElement.ended) {
-                requestAnimationFrame(renderFrame);
-            } else if (activeVideoElement && activeVideoElement.ended) {
+            if (isPlaying && !activeVideo.ended) {
+                requestAnimationFrame(renderVideoCanvas);
+            } else if (activeVideo.ended) {
                 isPlaying = false;
                 document.getElementById('playBtn').innerText = '▶';
             }
         }
 
         function togglePlay() {
-            if (!activeVideoElement) return alert('Önce video seçin!');
+            if (!activeVideo) return alert('Lütfen önce bir video yükleyin!');
             isPlaying = !isPlaying;
             if (isPlaying) {
-                activeVideoElement.play();
+                activeVideo.play();
                 document.getElementById('playBtn').innerText = '⏸';
-                renderFrame();
+                renderVideoCanvas();
             } else {
-                activeVideoElement.pause();
+                activeVideo.pause();
                 document.getElementById('playBtn').innerText = '▶';
             }
         }
 
-        function seekVideo(val) {
-            if (!activeVideoElement) return;
-            activeVideoElement.currentTime = (val / 100) * activeVideoElement.duration;
-            renderFrame();
+        function updatePlaybackTime() {
+            if (!activeVideo) return;
+            const cur = Math.floor(activeVideo.currentTime);
+            const dur = Math.floor(activeVideo.duration || 0);
+            document.getElementById('timeDisplay').innerText = `${formatSec(cur)} / ${formatSec(dur)}`;
         }
 
-        function updateTimeDisplay() {
-            if (!activeVideoElement) return;
-            const cur = Math.floor(activeVideoElement.currentTime);
-            const dur = Math.floor(activeVideoElement.duration || 0);
-            document.getElementById('timeDisplay').innerText = `${cur}s / ${dur}s`;
-            document.getElementById('seekSlider').value = (activeVideoElement.currentTime / activeVideoElement.duration) * 100 || 0;
+        function formatSec(s) {
+            const m = Math.floor(s / 60);
+            const sec = s % 60;
+            return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
         }
 
-        function updateProp(prop, val) {
-            videoProps[prop] = val;
-            if (activeVideoElement && !isPlaying) renderFrame();
+        function renderTrackClip() {
+            const track = document.getElementById('videoTrack');
+            track.innerHTML = '';
+            if (loadedClip) {
+                const clipDiv = document.createElement('div');
+                clipDiv.className = 'clip-item selected';
+                clipDiv.style.left = '0px';
+                clipDiv.style.width = Math.max(120, loadedClip.duration * 20) + 'px';
+                clipDiv.innerText = loadedClip.name;
+                track.appendChild(clipDiv);
+            }
         }
 
-        function updateVolume(val) {
-            if (activeVideoElement) activeVideoElement.volume = val;
+        function openDrawer(type) {
+            const drawer = document.getElementById('propDrawer');
+            const title = document.getElementById('drawerTitle');
+            const content = document.getElementById('drawerContent');
+
+            if (type === 'transform') {
+                title.innerText = 'Boyut & Konum Ayarları';
+                content.innerHTML = `
+                    <div class="controls-row">
+                        <div class="slider-box">
+                            <label>Ölçek (Büyüt)</label>
+                            <input type="range" min="0.5" max="3" step="0.1" value="${videoTransform.scale}" oninput="updateTransform('scale', this.value)">
+                        </div>
+                        <div class="slider-box">
+                            <label>X Konum (Yatay)</label>
+                            <input type="range" min="-300" max="300" value="${videoTransform.x}" oninput="updateTransform('x', this.value)">
+                        </div>
+                        <div class="slider-box">
+                            <label>Y Konum (Dikey)</label>
+                            <input type="range" min="-300" max="300" value="${videoTransform.y}" oninput="updateTransform('y', this.value)">
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'effects') {
+                title.innerText = 'Filtreler';
+                content.innerHTML = `
+                    <div style="display:flex; gap:8px;">
+                        <button class="top-btn" onclick="setFilterEffect('none')">Normal</button>
+                        <button class="top-btn" onclick="setFilterEffect('grayscale')">Siyah-Beyaz</button>
+                        <button class="top-btn" onclick="setFilterEffect('invert')">Negatif</button>
+                        <button class="top-btn" onclick="setFilterEffect('sepia')">Sepya</button>
+                    </div>
+                `;
+            } else if (type === 'ai') {
+                title.innerText = 'AI Altyazı Motoru';
+                content.innerHTML = `
+                    <button class="top-btn top-btn-primary" style="width:100%; justify-content:center;" onclick="startAIRecognition()">✨ Türkçe Konuşmaları Dinle ve Yaz</button>
+                `;
+            }
+            drawer.classList.add('open');
         }
 
-        function setFilter(f) {
-            videoProps.filter = f;
-            if (activeVideoElement && !isPlaying) renderFrame();
+        function closeDrawer() {
+            document.getElementById('propDrawer').classList.remove('open');
         }
 
-        function renderTimeline() {
-            document.getElementById('videoTrack').innerHTML = `<div class="media-clip">${clipName}</div>`;
+        function updateTransform(key, val) {
+            videoTransform[key] = parseFloat(val);
+            if (activeVideo && !isPlaying) renderVideoCanvas();
         }
 
-        function splitClip() { alert('Klip bölündü.'); }
-        function deleteClip() { activeVideoElement = null; drawPlaceholder(); document.getElementById('videoTrack').innerHTML = ''; alert('Klip silindi.'); }
-        function exportVideo() { alert('Dışa aktarılıyor...'); }
+        function setFilterEffect(f) {
+            videoTransform.filter = f;
+            if (activeVideo && !isPlaying) renderVideoCanvas();
+        }
+
+        function splitCurrentClip() {
+            if (!activeVideo) return;
+            alert(`Video ${activeVideo.currentTime.toFixed(1)}. saniyede bölündü!`);
+        }
+
+        function deleteCurrentClip() {
+            activeVideo = null;
+            loadedClip = null;
+            renderTrackClip();
+            renderInitialState();
+            closeDrawer();
+        }
+
+        function startAIRecognition() {
+            alert('AI Türkçe Ses Tanıma Aktif!');
+        }
+
+        function syncTimelineScroll() {
+            if (!activeVideo) return;
+            const viewport = document.getElementById('tracksViewport');
+            const scrollPercent = viewport.scrollLeft / (viewport.scrollWidth - viewport.clientWidth);
+            if (scrollPercent >= 0 && scrollPercent <= 1) {
+                activeVideo.currentTime = scrollPercent * activeVideo.duration;
+                if (!isPlaying) renderVideoCanvas();
+            }
+        }
+
+        function exportVideo() {
+            alert('Kurgulanan video render ediliyor...');
+        }
     </script>
 </body>
 </html>
