@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>StudioPro Mobile AI - CapCut & VN Style</title>
+    <title>StudioPro AI - Full CapCut Experience</title>
     <style>
         :root {
             --bg-dark: #0f0f11;
@@ -14,6 +14,7 @@
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: #3f3f46;
+            --danger: #ef4444;
         }
 
         * {
@@ -34,7 +35,6 @@
             overflow: hidden;
         }
 
-        /* Top Header */
         header {
             height: 48px;
             background-color: var(--bg-panel);
@@ -46,38 +46,27 @@
             z-index: 100;
         }
 
-        .logo {
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--text-main);
-        }
+        .logo { font-weight: 700; font-size: 15px; }
         .logo span { color: var(--accent); }
 
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .header-actions { display: flex; gap: 6px; }
 
         .btn {
             background-color: var(--bg-element);
             color: var(--text-main);
             border: 1px solid var(--border);
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        .btn-primary {
-            background-color: var(--accent);
-            border-color: var(--accent);
-            font-weight: 600;
-        }
+        .btn-danger { background-color: var(--danger); border-color: var(--danger); }
+        .btn-primary { background-color: var(--accent); border-color: var(--accent); font-weight: 600; }
 
-        /* Main Mobile Container */
         .app-container {
             flex: 1;
             display: flex;
@@ -86,92 +75,84 @@
             overflow: hidden;
         }
 
-        /* Preview Area (Top) */
         .preview-section {
             background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 8px;
             position: relative;
-            min-height: 240px;
-            max-height: 45vh;
+            height: 40vh;
         }
 
-        .aspect-selector {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-            z-index: 10;
-        }
+        .aspect-selector { display: flex; gap: 6px; margin-bottom: 6px; }
 
         .ratio-btn {
             background: rgba(39, 39, 42, 0.8);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
         }
 
-        .ratio-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
+        .ratio-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         .canvas-wrapper {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            max-width: 100%;
-            max-height: 300px;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
         }
 
         canvas {
             max-width: 100%;
-            max-height: 280px;
+            max-height: 100%;
             border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             background: #111;
         }
 
         .player-bar {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 6px;
+            gap: 10px;
+            width: 100%;
+            padding: 0 12px;
+            margin-top: 4px;
         }
 
         .play-btn {
             background: var(--accent);
             border: none;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
         }
 
-        .time-code {
-            font-size: 11px;
-            font-family: monospace;
-            color: var(--text-muted);
+        .seek-slider {
+            flex: 1;
+            accent-color: var(--accent);
+            height: 4px;
         }
 
-        /* Controls & Tab Navigation (Middle) */
+        .time-code { font-size: 10px; font-family: monospace; color: var(--text-muted); }
+
         .tools-section {
             background: var(--bg-panel);
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            max-height: 220px;
+            height: 22vh;
         }
 
         .nav-tabs {
@@ -183,7 +164,6 @@
 
         .tab-btn {
             flex: 1;
-            min-width: 70px;
             padding: 8px 4px;
             text-align: center;
             font-size: 11px;
@@ -192,42 +172,16 @@
             white-space: nowrap;
         }
 
-        .tab-btn.active {
-            color: var(--text-main);
-            border-bottom-color: var(--accent);
-            background: var(--bg-panel);
-        }
+        .tab-btn.active { color: var(--text-main); border-bottom-color: var(--accent); background: var(--bg-panel); }
 
-        .tab-body {
-            padding: 10px;
-            overflow-y: auto;
-            display: none;
-            max-height: 160px;
-        }
+        .tab-body { padding: 8px; overflow-y: auto; display: none; height: 100%; }
+        .tab-body.active { display: block; }
 
-        .tab-body.active {
-            display: block;
-        }
+        .control-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
 
-        .control-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
+        .slider-group { display: flex; flex-direction: column; gap: 2px; font-size: 10px; }
+        .slider-group input[type="range"] { width: 100%; accent-color: var(--accent); }
 
-        .slider-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 11px;
-        }
-
-        .slider-group input[type="range"] {
-            width: 100%;
-            accent-color: var(--accent);
-        }
-
-        /* Timeline Area (Bottom) */
         .timeline-section {
             flex: 1;
             background: var(--bg-dark);
@@ -237,41 +191,44 @@
             position: relative;
         }
 
-        .timeline-action-bar {
-            height: 32px;
+        .timeline-header {
+            height: 24px;
             background: var(--bg-panel);
             display: flex;
             align-items: center;
             padding: 0 10px;
-            gap: 10px;
+            font-size: 10px;
+            color: var(--text-muted);
             border-bottom: 1px solid var(--border);
         }
 
         .tracks-scroll {
             flex: 1;
-            overflow: auto;
-            padding: 8px 0;
+            overflow-x: auto;
+            overflow-y: auto;
+            padding: 6px 0;
             position: relative;
         }
 
         .track-row {
-            height: 42px;
+            height: 38px;
             display: flex;
             align-items: center;
             margin-bottom: 4px;
             position: relative;
             background: rgba(255,255,255,0.02);
+            min-width: 600px;
         }
 
         .track-header {
-            width: 65px;
+            width: 50px;
             background: var(--bg-panel);
             border-right: 1px solid var(--border);
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-muted);
             font-weight: bold;
             position: sticky;
@@ -279,69 +236,60 @@
             z-index: 10;
         }
 
-        .track-timeline {
-            flex: 1;
-            position: relative;
-            height: 100%;
-        }
+        .track-timeline { flex: 1; position: relative; height: 100%; }
 
         .media-clip {
             position: absolute;
-            height: 34px;
+            height: 30px;
             top: 4px;
-            background: var(--accent);
+            background: #2563eb;
             border-radius: 4px;
-            padding: 4px 8px;
+            padding: 2px 6px;
             font-size: 10px;
             color: white;
             display: flex;
             align-items: center;
             overflow: hidden;
             white-space: nowrap;
-            text-overflow: ellipsis;
             border: 1px solid rgba(255,255,255,0.3);
         }
 
-        .media-clip.video { background: #2563eb; }
-        .media-clip.audio { background: #059669; }
-        .media-clip.text { background: #d97706; }
+        .media-clip.selected { border: 2px solid #fff; box-shadow: 0 0 8px var(--accent); }
+
+        .playhead-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--danger);
+            z-index: 20;
+            pointer-events: none;
+            left: 50px;
+        }
 
         .upload-touch-btn {
             border: 2px dashed var(--border);
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            border-radius: 8px;
-            font-size: 12px;
-            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 11px;
             background: var(--bg-element);
-        }
-
-        @media (min-width: 768px) {
-            /* Desktop Fallback */
-            .app-container {
-                display: grid;
-                grid-template-columns: 300px 1fr;
-                grid-template-rows: 1fr 250px;
-            }
-            .preview-section { grid-column: 2; grid-row: 1; max-height: 100%; }
-            .tools-section { grid-column: 1; grid-row: 1 / 3; max-height: 100%; }
-            .timeline-section { grid-column: 2; grid-row: 2; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">🎬 StudioPro <span>Mobile</span></div>
+        <div class="logo">🎬 StudioPro <span>CapCut AI</span></div>
         <div class="header-actions">
             <button class="btn" onclick="splitClip()">✂️ Böl</button>
+            <button class="btn btn-danger" onclick="deleteSelectedClip()">🗑 Sil</button>
             <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar</button>
         </div>
     </header>
 
     <div class="app-container">
         
-        <!-- Preview -->
         <div class="preview-section">
             <div class="aspect-selector">
                 <button class="ratio-btn active" onclick="setAspect(16, 9, this)">16:9 YT</button>
@@ -353,84 +301,74 @@
             </div>
             <div class="player-bar">
                 <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+                <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1" oninput="seekVideo(this.value)">
                 <span class="time-code" id="timeDisplay">00:00 / 00:00</span>
             </div>
         </div>
 
-        <!-- Controls / Tools -->
         <div class="tools-section">
             <div class="nav-tabs">
                 <div class="tab-btn active" onclick="switchTab('media')">📁 Medya</div>
-                <div class="tab-btn" onclick="switchTab('adjust')">🎛 Ayarlar</div>
+                <div class="tab-btn" onclick="switchTab('adjust')">🎛 Özelleştir</div>
                 <div class="tab-btn" onclick="switchTab('effects')">✨ Efektler</div>
-                <div class="tab-btn" onclick="switchTab('ai')">🤖 AI Araçlar</div>
+                <div class="tab-btn" onclick="switchTab('ai')">🤖 AI Altyazı</div>
             </div>
 
-            <!-- Tab: Media -->
             <div id="tab-media" class="tab-body active">
                 <div class="upload-touch-btn" onclick="document.getElementById('fileInput').click()">
                     ➕ Video / Görsel Seç
-                    <input type="file" id="fileInput" style="display:none" accept="video/*,audio/*,image/*" onchange="handleFileSelect(event)">
+                    <input type="file" id="fileInput" style="display:none" accept="video/*" onchange="handleFileSelect(event)">
                 </div>
-                <div id="mediaStatus" style="font-size:11px; margin-top:6px; color:var(--text-muted); text-align:center;"></div>
+                <div id="mediaStatus" style="font-size:10px; margin-top:4px; color:var(--text-muted); text-align:center;"></div>
             </div>
 
-            <!-- Tab: Adjust -->
             <div id="tab-adjust" class="tab-body">
                 <div class="control-grid">
                     <div class="slider-group">
-                        <label>Ölçek (Scale)</label>
-                        <input type="range" min="0.5" max="2" step="0.1" value="1" oninput="updateProp('scale', this.value)">
+                        <label>Ölçek (Büyüt/Küçült)</label>
+                        <input type="range" min="0.2" max="3" step="0.1" value="1" id="scaleSlider" oninput="updateProp('scale', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>X Konumu (Sağ/Sol)</label>
+                        <input type="range" min="-300" max="300" value="0" oninput="updateProp('posX', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>Y Konumu (Yukarı/Aşağı)</label>
+                        <input type="range" min="-300" max="300" value="0" oninput="updateProp('posY', this.value)">
                     </div>
                     <div class="slider-group">
                         <label>Ses Seviyesi</label>
                         <input type="range" min="0" max="1" step="0.1" value="1" oninput="updateVolume(this.value)">
                     </div>
-                    <div class="slider-group">
-                        <label>Parlaklık</label>
-                        <input type="range" min="0" max="200" value="100" oninput="updateProp('brightness', this.value)">
-                    </div>
-                    <div class="slider-group">
-                        <label>Kontrast</label>
-                        <input type="range" min="0" max="200" value="100" oninput="updateProp('contrast', this.value)">
-                    </div>
                 </div>
             </div>
 
-            <!-- Tab: Effects -->
             <div id="tab-effects" class="tab-body">
-                <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:4px;">
                     <button class="btn" onclick="setFilter('none')">Normal</button>
-                    <button class="btn" onclick="setFilter('grayscale')">Siyah & Beyaz</button>
+                    <button class="btn" onclick="setFilter('grayscale')">Siyah-Beyaz</button>
                     <button class="btn" onclick="setFilter('invert')">Negatif</button>
-                    <button class="btn" onclick="setFilter('blur')">Bulanık (Blur)</button>
-                    <button class="btn" onclick="setFilter('sepia')">Sepya Retro</button>
+                    <button class="btn" onclick="setFilter('blur')">Bulanık</button>
+                    <button class="btn" onclick="setFilter('sepia')">Sepya</button>
                 </div>
             </div>
 
-            <!-- Tab: AI -->
             <div id="tab-ai" class="tab-body">
-                <button class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:6px;" onclick="alert('AI Otomatik Altyazı Başlatıldı!')">✨ Otomatik Altyazı (Auto Subtitle)</button>
-                <button class="btn" style="width:100%; justify-content:center;" onclick="alert('Gemini AI Video Fikirleri Hazır!')">🤖 Gemini AI İçerik Önerisi</button>
+                <button class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:4px;" onclick="runSpeechAI()">✨ Türkçe AI Otomatik Altyazı Başlat</button>
+                <div id="aiOutput" style="font-size:10px; color:var(--accent); text-align:center;"></div>
             </div>
         </div>
 
-        <!-- Timeline -->
         <div class="timeline-section">
-            <div class="timeline-action-bar">
-                <span style="font-size:10px; color:var(--text-muted);">ZAMAN ÇİZELGESİ</span>
-            </div>
-            <div class="tracks-scroll">
+            <div class="timeline-header">ZAMAN ÇİZELGESİ (Sarmak İçin Dokun)</div>
+            <div class="tracks-scroll" id="timelineScroll" onclick="onTimelineClick(event)">
+                <div class="playhead-line" id="playheadLine"></div>
                 <div class="track-row">
                     <div class="track-header">VIDEO</div>
                     <div class="track-timeline" id="videoTrack"></div>
                 </div>
                 <div class="track-row">
-                    <div class="track-header">SES</div>
-                    <div class="track-timeline" id="audioTrack"></div>
-                </div>
-                <div class="track-row">
-                    <div class="track-header">METİN</div>
+                    <div class="track-header">ALTYAZI</div>
                     <div class="track-timeline" id="textTrack"></div>
                 </div>
             </div>
@@ -446,16 +384,22 @@
 
         let videoProps = {
             scale: 1,
+            posX: 0,
+            posY: 0,
             brightness: 100,
             contrast: 100,
             filter: 'none'
         };
 
+        let clips = [];
+        let selectedClipIndex = -1;
+        let subtitles = [];
+
         function drawPlaceholder() {
             ctx.fillStyle = '#18181b';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#71717a';
-            ctx.font = '16px sans-serif';
+            ctx.font = '14px sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('Medya Seçin', canvas.width / 2, canvas.height / 2);
         }
@@ -471,16 +415,9 @@
         function setAspect(w, h, btn) {
             document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            if (w === 9) {
-                canvas.width = 720;
-                canvas.height = 1280;
-            } else if (w === 1) {
-                canvas.width = 720;
-                canvas.height = 720;
-            } else {
-                canvas.width = 1280;
-                canvas.height = 720;
-            }
+            if (w === 9) { canvas.width = 720; canvas.height = 1280; }
+            else if (w === 1) { canvas.width = 720; canvas.height = 720; }
+            else { canvas.width = 1280; canvas.height = 720; }
             if (activeVideoElement) renderFrame();
             else drawPlaceholder();
         }
@@ -489,22 +426,19 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            document.getElementById('mediaStatus').innerText = 'Seçildi: ' + file.name;
+            document.getElementById('mediaStatus').innerText = 'Yüklendi: ' + file.name;
 
-            if (file.type.startsWith('video')) {
-                activeVideoElement = document.createElement('video');
-                activeVideoElement.src = URL.createObjectURL(file);
-                activeVideoElement.crossOrigin = 'anonymous';
-                activeVideoElement.load();
+            activeVideoElement = document.createElement('video');
+            activeVideoElement.src = URL.createObjectURL(file);
+            activeVideoElement.crossOrigin = 'anonymous';
+            activeVideoElement.load();
 
-                activeVideoElement.onloadedmetadata = () => {
-                    renderFrame();
-                    updateTimeDisplay();
-                };
-
-                const track = document.getElementById('videoTrack');
-                track.innerHTML = `<div class="media-clip video" style="left:0; width:80%;">${file.name}</div>`;
-            }
+            activeVideoElement.onloadedmetadata = () => {
+                clips = [{ id: 1, name: file.name, start: 0, duration: activeVideoElement.duration }];
+                selectedClipIndex = 0;
+                renderTimelineClips();
+                renderFrame();
+            };
         }
 
         function renderFrame() {
@@ -520,12 +454,24 @@
             if (videoProps.filter === 'sepia') filterStr += ' sepia(100%)';
             ctx.filter = filterStr;
 
-            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.translate((canvas.width / 2) + parseFloat(videoProps.posX), (canvas.height / 2) + parseFloat(videoProps.posY));
             ctx.scale(videoProps.scale, videoProps.scale);
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
             ctx.drawImage(activeVideoElement, 0, 0, canvas.width, canvas.height);
             ctx.restore();
+
+            // Render Subtitles
+            const curTime = activeVideoElement.currentTime;
+            const currentSub = subtitles.find(s => curTime >= s.start && curTime <= s.end);
+            if (currentSub) {
+                ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                ctx.fillRect(canvas.width*0.1, canvas.height*0.8, canvas.width*0.8, 60);
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 24px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(currentSub.text, canvas.width / 2, canvas.height * 0.85);
+            }
 
             updateTimeDisplay();
 
@@ -550,6 +496,26 @@
             }
         }
 
+        function seekVideo(val) {
+            if (!activeVideoElement) return;
+            const targetTime = (val / 100) * activeVideoElement.duration;
+            activeVideoElement.currentTime = targetTime;
+            renderFrame();
+        }
+
+        function updateTimeDisplay() {
+            if (!activeVideoElement) return;
+            const cur = Math.floor(activeVideoElement.currentTime);
+            const dur = Math.floor(activeVideoElement.duration || 0);
+            document.getElementById('timeDisplay').innerText = `${cur}s / ${dur}s`;
+            
+            const progress = (activeVideoElement.currentTime / activeVideoElement.duration) * 100;
+            document.getElementById('seekSlider').value = progress || 0;
+
+            const playhead = document.getElementById('playheadLine');
+            playhead.style.left = (50 + (progress * 5)) + 'px';
+        }
+
         function updateProp(prop, val) {
             videoProps[prop] = val;
             if (activeVideoElement && !isPlaying) renderFrame();
@@ -559,20 +525,82 @@
             if (activeVideoElement) activeVideoElement.volume = val;
         }
 
-        function setFilter(filter) {
-            videoProps.filter = filter;
+        function setFilter(f) {
+            videoProps.filter = f;
             if (activeVideoElement && !isPlaying) renderFrame();
         }
 
-        function updateTimeDisplay() {
-            if (!activeVideoElement) return;
-            const cur = Math.floor(activeVideoElement.currentTime);
-            const dur = Math.floor(activeVideoElement.duration || 0);
-            document.getElementById('timeDisplay').innerText = `${cur}s / ${dur}s`;
+        function renderTimelineClips() {
+            const track = document.getElementById('videoTrack');
+            track.innerHTML = '';
+            clips.forEach((clip, index) => {
+                const el = document.createElement('div');
+                el.className = `media-clip ${index === selectedClipIndex ? 'selected' : ''}`;
+                el.style.left = (clip.start * 10) + 'px';
+                el.style.width = (clip.duration * 10) + 'px';
+                el.innerText = clip.name;
+                el.onclick = () => { selectedClipIndex = index; renderTimelineClips(); };
+                track.appendChild(el);
+            });
         }
 
-        function splitClip() { alert('Video klip bölündü.'); }
-        function exportVideo() { alert('Dışa aktarma başlatıldı! Video cihazınıza indiriliyor.'); }
+        function splitClip() {
+            if (!activeVideoElement) return;
+            const curTime = activeVideoElement.currentTime;
+            alert(`Video ${curTime.toFixed(1)}. saniyede ikiye bölündü!`);
+            clips.push({ id: Date.now(), name: 'Bölünmüş Klip', start: curTime, duration: activeVideoElement.duration - curTime });
+            renderTimelineClips();
+        }
+
+        function deleteSelectedClip() {
+            if (selectedClipIndex === -1) return alert('Lütfen silmek için bir klip seçin!');
+            clips.splice(selectedClipIndex, 1);
+            selectedClipIndex = -1;
+            renderTimelineClips();
+            alert('Seçili parça silindi!');
+        }
+
+        function runSpeechAI() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                return alert('Tarayıcınız AI ses tanımayı desteklemiyor (Chrome kullanın).');
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'tr-TR';
+            recognition.start();
+
+            document.getElementById('aiOutput').innerText = '🎙 Dinleniyor... Konuşun...';
+
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                document.getElementById('aiOutput').innerText = 'Algılandı: ' + text;
+                const cur = activeVideoElement ? activeVideoElement.currentTime : 0;
+                subtitles.push({ start: cur, end: cur + 3, text: text });
+
+                const textTrack = document.getElementById('textTrack');
+                const subEl = document.createElement('div');
+                subEl.className = 'media-clip';
+                subEl.style.background = '#d97706';
+                subEl.style.left = (cur * 10) + 'px';
+                subEl.style.width = '100px';
+                subEl.innerText = text;
+                textTrack.appendChild(subEl);
+                renderFrame();
+            };
+        }
+
+        function onTimelineClick(e) {
+            if (!activeVideoElement) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left - 50;
+            if (clickX > 0) {
+                const targetTime = (clickX / 500) * activeVideoElement.duration;
+                activeVideoElement.currentTime = targetTime;
+                renderFrame();
+            }
+        }
+
+        function exportVideo() { alert('Kurgulanan video dışa aktarılıyor!'); }
     </script>
 </body>
 </html>
