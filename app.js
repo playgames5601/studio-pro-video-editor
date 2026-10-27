@@ -7,11 +7,7 @@ const timeLabel = document.getElementById('timeLabel');
 let activeVideo = null;
 let isPlaying = false;
 let clipName = '';
-
-let videoTransform = {
-    scale: 1,
-    filter: 'none'
-};
+let currentFilter = 'none';
 
 function drawPlaceholder() {
     ctx.fillStyle = '#050505';
@@ -58,29 +54,30 @@ function renderFrame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     let filterStr = '';
-    if (videoTransform.filter === 'grayscale') filterStr = 'grayscale(100%)';
-    if (videoTransform.filter === 'invert') filterStr = 'invert(100%)';
-    if (videoTransform.filter === 'sepia') filterStr = 'sepia(100%)';
+    if (currentFilter === 'grayscale') filterStr = 'grayscale(100%)';
+    if (currentFilter === 'invert') filterStr = 'invert(100%)';
+    if (currentFilter === 'sepia') filterStr = 'sepia(100%)';
     ctx.filter = filterStr;
 
-    // Proportional Center Crop Fit
-    const vWidth = activeVideo.videoWidth || canvas.width;
-    const vHeight = activeVideo.videoHeight || canvas.height;
-    const scaleFactor = Math.min(canvas.width / vWidth, canvas.height / vHeight) * videoTransform.scale;
+    // Videoyu tuvala kusursuz sığdırma ve doldurma mantığı (Cover/Contain)
+    const vW = activeVideo.videoWidth || canvas.width;
+    const vH = activeVideo.videoHeight || canvas.height;
+    
+    // 9:16 ekranda yatay videonun kenarlarını doldurması için esnek oran
+    const ratio = Math.max(canvas.width / vW, canvas.height / vH);
+    const dW = vW * ratio;
+    const dH = vH * ratio;
+    const dX = (canvas.width - dW) / 2;
+    const dY = (canvas.height - dH) / 2;
 
-    const drawW = vWidth * scaleFactor;
-    const drawH = vHeight * scaleFactor;
-    const drawX = (canvas.width - drawW) / 2;
-    const drawY = (canvas.height - drawH) / 2;
-
-    ctx.drawImage(activeVideo, drawX, drawY, drawW, drawH);
+    ctx.drawImage(activeVideo, dX, dY, dW, dH);
     ctx.restore();
 
     updatePlaybackUI();
 
     if (isPlaying && !activeVideo.ended) {
         requestAnimationFrame(renderFrame);
-    } else if (activeVideo.ended) {
+    } else if (activeVideo && activeVideo.ended) {
         isPlaying = false;
         playBtn.innerText = '▶';
     }
@@ -126,8 +123,16 @@ function renderTimeline() {
 }
 
 function splitClip() {
-    if (!activeVideo) return;
-    alert(`Video ${activeVideo.currentTime.toFixed(1)}. saniyede bölündü!`);
+    if (!activeVideo) return alert('Önce video yükleyin.');
+    alert(`Video ${activeVideo.currentTime.toFixed(1)}. saniyede ikiye bölündü!`);
+}
+
+function applyFilter() {
+    const filters = ['none', 'grayscale', 'invert', 'sepia'];
+    let next = filters[(filters.indexOf(currentFilter) + 1) % filters.length];
+    currentFilter = next;
+    alert(`Filtre değiştirildi: ${next.toUpperCase()}`);
+    if (activeVideo && !isPlaying) renderFrame();
 }
 
 function deleteClip() {
@@ -142,5 +147,5 @@ function deleteClip() {
 }
 
 function exportVideo() {
-    alert('Kurgulanan video dışa aktarılıyor!');
+    alert('Kurgulanan video yüksek kalitede dışa aktarılıyor!');
 }
