@@ -1,0 +1,258 @@
+:root {
+    --bg-dark: #000000;
+    --bg-panel: #121214;
+    --bg-card: #1c1c1e;
+    --accent: #2563eb;
+    --text-main: #ffffff;
+    --text-sub: #a1a1aa;
+    --border: #27272a;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Clean Header */
+header {
+    height: 48px;
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+    z-index: 50;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--text-main);
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Workspace */
+.workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Preview Player Area */
+.preview-container {
+    flex: 1;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 10px;
+}
+
+.aspect-bar {
+    position: absolute;
+    top: 10px;
+    display: flex;
+    gap: 6px;
+    background: rgba(18, 18, 20, 0.85);
+    padding: 4px 8px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    z-index: 20;
+}
+
+.aspect-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-sub);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.aspect-btn.active {
+    background: var(--text-main);
+    color: #000;
+}
+
+.viewport-wrapper {
+    width: 100%;
+    height: 100%;
+    max-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+}
+
+/* Playback Control Bar */
+.playback-bar {
+    height: 40px;
+    width: 100%;
+    background: var(--bg-panel);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.play-btn {
+    background: var(--accent);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.seek-slider {
+    flex: 1;
+    accent-color: var(--accent);
+    height: 4px;
+}
+
+.time-label {
+    font-size: 11px;
+    font-family: monospace;
+    color: var(--text-sub);
+    min-width: 65px;
+    text-align: right;
+}
+
+/* VN Timeline */
+.timeline-section {
+    height: 140px;
+    background: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.timeline-header {
+    height: 22px;
+    background: var(--bg-panel);
+    font-size: 10px;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.tracks-viewport {
+    flex: 1;
+    overflow-x: auto;
+    position: relative;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.clip-box {
+    height: 48px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    white-space: nowrap;
+}
+
+/* Bottom VN Toolbar */
+.toolbar {
+    height: 56px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-shrink: 0;
+}
+
+.tool-btn {
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    gap: 3px;
+    cursor: pointer;
+}
+
+.tool-btn span {
+    font-size: 18px;
+}
+
+.tool-btn.danger {
+    color: var(--danger);
+}
