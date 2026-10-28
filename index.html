@@ -1,59 +1,72 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>StudioPro - Mobile Video Editor</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StudioPro</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header>
+  <b class="logo">StudioPro</b>
+  <div class="hr">
+    <button class="btn" id="add">+ Medya</button>
+    <button class="btn pri" id="exp">Dışa Aktar</button>
+  </div>
+  <input type="file" id="file" accept="video/*,image/*,audio/*" multiple hidden>
+</header>
 
-    <header>
-        <div class="logo">StudioPro</div>
-        <div class="header-actions">
-            <button class="btn" onclick="document.getElementById('fileInput').click()">➕ Medya</button>
-            <button class="btn btn-primary" onclick="exportVideo()">🚀 Dışa Aktar</button>
-        </div>
-    </header>
+<nav class="ratios" id="ratios">
+  <button data-r="9:16" class="on">9:16 TikTok</button>
+  <button data-r="16:9">16:9 YT</button>
+  <button data-r="1:1">1:1 Kare</button>
+</nav>
 
-    <div class="workspace">
-        
-        <div class="preview-container">
-            <div class="aspect-bar">
-                <button class="aspect-btn active" onclick="setAspect(9, 16, this)">9:16 TikTok</button>
-                <button class="aspect-btn" onclick="setAspect(16, 9, this)">16:9 YT</button>
-                <button class="aspect-btn" onclick="setAspect(1, 1, this)">1:1 Kare</button>
-            </div>
+<main id="stage"><canvas id="cv"></canvas></main>
 
-            <div class="viewport-wrapper">
-                <canvas id="mainCanvas" width="720" height="1280"></canvas>
-            </div>
-        </div>
+<section class="bar">
+  <button class="round" id="play">▶</button>
+  <span id="time">00:00 / 00:00</span>
+  <button class="btn sm" id="zo">−</button>
+  <button class="btn sm" id="zi">+</button>
+</section>
 
-        <div class="playback-bar">
-            <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-            <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1" oninput="seekVideo(this.value)">
-            <span class="time-label" id="timeLabel">00:00 / 00:00</span>
-        </div>
+<section id="tlScroll">
+  <div id="tlInner">
+    <div id="ruler"></div>
+    <div class="row" data-t="video"></div>
+    <div class="row" data-t="text"></div>
+    <div class="row" data-t="audio"></div>
+    <div id="head"></div>
+  </div>
+</section>
 
-        <div class="timeline-section">
-            <div class="timeline-header">VİDEO KATI</div>
-            <div class="tracks-viewport" id="timelineTrack">
-                <span style="color:#71717a; font-size:11px;">Henüz medya eklenmedi.</span>
-            </div>
-        </div>
+<section class="tools">
+  <button class="btn" id="undo">Geri al</button>
+  <button class="btn" id="split">Böl</button>
+  <button class="btn" id="text">+ Metin</button>
+  <button class="btn" id="del">Sil</button>
+</section>
 
-        <div class="toolbar">
-            <button class="tool-btn" onclick="splitClip()"><span>✂️</span>Böl</button>
-            <button class="tool-btn" onclick="applyFilter()"><span>✨</span>Filtrele</button>
-            <button class="tool-btn" onclick="alert('Ses seviyesi normal')"><span>🔊</span>Ses</button>
-            <button class="tool-btn danger" onclick="deleteClip()"><span>🗑</span>Sil</button>
-        </div>
+<section id="insp" hidden>
+  <label class="m">Hız <b id="spv"></b><input id="sp" type="range" min=".25" max="4" step=".05"></label>
+  <label class="m">Ses<input id="vol" type="range" min="0" max="1" step=".05"></label>
+  <label class="vis">Filtre<select id="flt"></select></label>
+  <label class="vis"><span><input id="fit" type="checkbox"> Ekranı doldur</span></label>
+  <label class="fd"><span><input id="fade" type="checkbox"> Yumuşak geçiş</span></label>
+  <label class="tx">Yazı<textarea id="txt" rows="2"></textarea></label>
+  <label class="tx">Boyut<input id="sz" type="range" min="24" max="180"></label>
+  <label class="tx">Dikey konum<input id="py" type="range" min="5" max="95"></label>
+  <label class="tx">Renk<input id="col" type="color"></label>
+</section>
 
-    </div>
-
-    <input type="file" id="fileInput" style="display:none" accept="video/*" onchange="loadMedia(event)">
-
-    <script src="app.js"></script>
+<div id="ovl" hidden>
+  <b>Dışa aktarılıyor… <span id="pct">0%</span></b>
+  <div id="prog"><i></i></div>
+  <small>Gerçek zamanlı kaydedilir. Bu sekmeyi açık ve ekranı uyanık tut.</small>
+  <button class="btn" id="cancel">İptal</button>
+</div>
+<div id="toast" hidden></div>
+<script src="app.js"></script>
 </body>
 </html>
